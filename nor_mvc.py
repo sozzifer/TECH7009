@@ -3,7 +3,7 @@ import dash_bootstrap_components as dbc
 import plotly.express as px
 import pandas as pd
 import numpy as np
-
+from scipy.stats import norm
 
 app = Dash(__name__,
            title="Normal distribution",

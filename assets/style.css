@@ -12,7 +12,7 @@
     --midgrey: #adafaf;
     --ltgrey: #f3f3f3;
 }
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;800&display=swap');
+
 @font-face {
     font-family: "Regular";
     src: url("OpenSans-Regular.ttf");
@@ -46,41 +46,47 @@ table.desc {
     margin: 0 auto
 }
 
-td {
+td, th {
     padding: 2px 5px
 }
-td.mean {
-    font-family: "SemiBold", sans-serif;
-    text-align: right;
-    color: var(--blue);
-}
-td.std {
-    font-family: "SemiBold", sans-serif;
-    text-align: right;
-    color: var(--aqua);
-}
-td.q1 {
-    font-family: "SemiBold", sans-serif;
-    text-align: right;
-    color: var(--purple);
-}
-td.median {
-    font-family: "SemiBold", sans-serif;
-    text-align: right;
-    color: var(--green);
-}
-td.q3 {
-    font-family: "SemiBold", sans-serif;
-    text-align: right;
-    color: var(--purple);
-}
-td.iqr {
-    font-family: "SemiBold", sans-serif;
-    text-align: right;
-    color: var(--purple);
+
+td.right, th.right {
+        font-family: "SemiBold", sans-serif;
+        text-align: right;
 }
 
-#header1, #header2 {
-    font-family: "SemiBold", sans-serif;
-    text-align: center;
+#collapse1, #collapse2 {
+    margin: 10px auto
+}
+
+#toggle {
+    margin: 10px;
+    background-color: #003896;
+    width: 200px
+}
+
+.mean-line {
+    border-top: 3px solid var(--gold);
+    display: block;
+    width: 30px
+}
+.median-line {
+    border-top: 3px solid var(--green);
+    display: block;
+    width: 30px
+}
+.std-line {
+    border-top: 3px solid var(--aqua);
+    display: block;
+    width: 30px
+}
+.q1-line {
+    border-top: 3px solid var(--red);
+    display: block;
+    width: 30px
+}
+.q3-line {
+    border-top: 3px solid var(--red);
+    display: block;
+    width: 30px
 }

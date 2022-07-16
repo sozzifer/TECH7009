@@ -1,12 +1,16 @@
-from dash import Input, Output
+from dash import Input, Output, State
 import plotly.express as px
 from dis_view import app
 import dis_model
 
 
 @app.callback(
-    Output("header1", "children"),
-    Output("header2", "children"),
+    Output("category1", "children"),
+    Output("category2", "children"),
+    Output("group1", "children"),
+    Output("group2", "children"),
+    Output("n1", "children"),
+    Output("n2", "children"),
     Output("mean1", "children"),
     Output("std1", "children"),
     Output("q1_1", "children"),
@@ -25,20 +29,21 @@ def update_statistics(value):
     categories, stats_df1, stats_df2 = dis_model.get_df(value)
     n1, mean1, std1, q1_1, median1, q3_1, iqr1 = dis_model.get_stats(stats_df1)
     n2, mean2, std2, q1_2, median2, q3_2, iqr2 = dis_model.get_stats(stats_df2)
-    header1 = f"{value} = {categories[0]}, N = {n1}"
-    header2 = f"{value} = {categories[1]}, N = {n2}"
-    return header1, header2, mean1, std1, q1_1, median1, q3_1, iqr1, mean2, std2, q1_2, median2, q3_2, iqr2
+
+    group1 = categories[0]
+    group2 = categories[1]
+    return f"{value}:", f"{value}:", group1, group2, n1, n2, mean1, u"\u00B1"+ str(std1), q1_1, median1, q3_1, iqr1, mean2, u"\u00B1" + str(std2), q1_2, median2, q3_2, iqr2
 
 
 def format_histogram(df, fig):
-    fig.update_layout(margin=dict(t=10, b=10))
+    fig.update_layout(margin=dict(t=10, b=10), modebar_remove=["autoscale","pan", "lasso", "select", "zoom", "zoomin", "zoomout", "resetscale", "toimage"])
     fig.update_xaxes(range=[0, 28.5],
                      dtick=7,
                      tick0=7)
     fig.update_yaxes(title_text=None,
                      range=[0, 91])
     fig.add_vline(x=df.mean(),
-                  line_color="#003896")
+                  line_color="#f49103")
     fig.add_vline(x=df.median(),
                   line_color="#006338")
     fig.add_vline(x=df.mean() + df.std(),
@@ -46,9 +51,9 @@ def format_histogram(df, fig):
     fig.add_vline(x=df.mean() - df.std(),
                   line_color="#0085a1")
     fig.add_vline(x=df.quantile(0.25),
-                  line_color="#6a2150")
+                  line_color="#c70540")
     fig.add_vline(x=df.quantile(0.75),
-                  line_color="#6a2150")
+                  line_color="#c70540")
 
 
 @app.callback(
@@ -85,7 +90,8 @@ def update_histogram(value):
 
 
 def format_boxplot(df, fig):
-    fig.update_layout(margin=dict(t=10, b=10))
+    fig.update_layout(margin=dict(t=10, b=10), modebar_remove=[
+                      "autoscale", "pan", "lasso", "select", "zoom", "zoomin", "zoomout", "resetscale", "toimage"])
     fig.update_traces(hoveron="boxes")
     fig.update_xaxes(range=[0, 28.5],
                      dtick=7,
@@ -93,7 +99,7 @@ def format_boxplot(df, fig):
     fig.update_yaxes(visible=False,
                      showticklabels=False)
     fig.add_vline(x=df.mean(),
-                  line_color="#003896")
+                  line_color="#f49103")
     fig.add_vline(x=df.median(),
                   line_color="#006338")
     fig.add_vline(x=df.mean() + df.std(),
@@ -101,9 +107,9 @@ def format_boxplot(df, fig):
     fig.add_vline(x=df.mean() - df.std(),
                   line_color="#0085a1")
     fig.add_vline(x=df.quantile(0.25),
-                  line_color="#6a2150")
+                  line_color="#c70540")
     fig.add_vline(x=df.quantile(0.75),
-                  line_color="#6a2150")
+                  line_color="#c70540")
 
 
 @app.callback(
@@ -131,6 +137,19 @@ def update_boxplot(value):
     format_boxplot(box_df2, fig2)
 
     return fig1, fig2
+
+
+@app.callback(
+    Output("collapse1", "is_open"),
+    Output("collapse2", "is_open"),
+    Input("toggle", "n_clicks"),
+    State("collapse1", "is_open"),
+    State("collapse2", "is_open"),
+)
+def toggle(n_clicks, is_open1, is_open2):
+    if n_clicks:
+        return not is_open1, not is_open2
+    return is_open1, is_open2
 
 
 if __name__ == "__main__":

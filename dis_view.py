@@ -25,43 +25,103 @@ app.layout = dbc.Container([
         ], style={"margin":"auto"}, xs=12, sm=3, md=3, lg=3, xl=3)
     ], class_name="justify-content-center"),
     dbc.Row([
-        dbc.Col([
-            html.H3("Descriptive statistics"),
-            html.H3(id="header1"),
-            html.Table(className="desc", children=[
-                html.Tr([html.Td(className="mean", children=["Mean:"]),
-                        html.Td(id="mean1")]),
-                html.Tr([html.Td(className="median", children=["Median:"]),
-                        html.Td(id="median1")]),
-                html.Tr([html.Td(className="std", children=["Standard deviation:"]),
-                        html.Td(id="std1")]),
-                html.Tr([html.Td(className="q1", children=["First quartile:"]),
-                        html.Td(id="q1_1")]),
-                html.Tr([html.Td(className="q3", children=["Third quartile:"]),
-                        html.Td(id="q3_1")]),
-                html.Tr([html.Td(className="iqr", children=["Interquartile range:"]),
-                        html.Td(id="iqr1")]),
-            ])
-        ], xs=6, sm=6, md=6, lg=6, xl=6),
-        dbc.Col([
-            html.H3("Descriptive statistics"),
-            html.H3(id="header2"),
-            html.Table(className="desc", children=[
-                html.Tr([html.Td(className="mean", children=["Mean:"]),
-                        html.Td(id="mean2")]),
-                html.Tr([html.Td(className="median", children=["Median:"]),
-                        html.Td(id="median2")]),
-                html.Tr([html.Td(className="std", children=["Standard deviation:"]),
-                        html.Td(id="std2")]),
-                html.Tr([html.Td(className="q1", children=["First quartile:"]),
-                        html.Td(id="q1_2")]),
-                html.Tr([html.Td(className="q3", children=["Third quartile:"]),
-                        html.Td(id="q3_2")]),
-                html.Tr([html.Td(className="iqr", children=["Interquartile range:"]),
-                        html.Td(id="iqr2")]),
-            ])
-        ], xs=6, sm=6, md=6, lg=6, xl=6)
-    ], style={"padding": 20}),
+        dbc.Button("Descriptive statistics", id="toggle", n_clicks=0)
+    ], class_name="justify-content-center"),
+    dbc.Row([
+            dbc.Col([
+                dbc.Collapse([
+                    dbc.Card([
+                        dbc.CardBody([
+                            html.Table(className="desc", children=[
+                                html.Thead([
+                                    html.Th(id="category1", className="right"),
+                                    html.Th(id="group1"),
+                                    html.Th(children=["Key"])
+                                ]),
+                                html.Tr([html.Td(className="right", children=["Sample size:"]),
+                                         html.Td(id="n1")
+                                ]), 
+                                html.Tr([html.Td(className="right", children=["Mean:"]),
+                                         html.Td(id="mean1"),
+                                         html.Td(
+                                            html.Span(className="mean-line"))
+                                ]),
+                                html.Tr([html.Td(className="right", children=["Median:"]),
+                                         html.Td(id="median1"),
+                                         html.Td(
+                                            html.Span(className="median-line"))
+                                ]),
+                                html.Tr([html.Td(className="right", children=["Standard deviation:"]),
+                                         html.Td(
+                                             id="std1", children=[]),
+                                         html.Td(
+                                            html.Span(className="std-line"))
+                                ]),
+                                html.Tr([html.Td(className="right", children=["First quartile:"]),
+                                         html.Td(id="q1_1"),
+                                         html.Td(
+                                            html.Span(className="q1-line"))
+                                ]),
+                                html.Tr([html.Td(className="right", children=["Third quartile:"]),
+                                         html.Td(id="q3_1"),
+                                         html.Td(
+                                            html.Span(className="q3-line"))
+                                ]),
+                                html.Tr([html.Td(className="right", children=["Interquartile range:"]),
+                                         html.Td(id="iqr1")
+                                ])
+                            ])
+                        ])
+                    ], id="card1", style={"margin": "auto"})
+                ], class_name="justify-content-center", id="collapse1", is_open=False)
+            ], xs=12, sm=12, md=12, lg=6, xl=6, style={"margin": "auto"}),
+            dbc.Col([
+                dbc.Collapse([
+                    dbc.Card([
+                        dbc.CardBody([
+                            html.Table(className="desc", children=[
+                                html.Thead([
+                                    html.Th(id="category2", className="right"),
+                                    html.Th(id="group2"),
+                                    html.Th(children=["Key"])
+                                ]),
+                                html.Tr([html.Td(className="right", children=["Sample size:"]),
+                                         html.Td(id="n2")
+                                ]),
+                                html.Tr([html.Td(className="right", children=["Mean:"]),
+                                         html.Td(id="mean2"),
+                                         html.Td(
+                                            html.Span(className="mean-line"))
+                                ]),
+                                html.Tr([html.Td(className="right", children=["Median:"]),
+                                         html.Td(id="median2"),
+                                         html.Td(
+                                            html.Span(className="median-line"))
+                                ]),
+                                html.Tr([html.Td(className="right", children=["Standard deviation:"]),
+                                         html.Td(id="std2"),
+                                         html.Td(
+                                            html.Span(className="std-line"))
+                                ]),
+                                html.Tr([html.Td(className="right", children=["First quartile:"]),
+                                         html.Td(id="q1_2"),
+                                         html.Td(
+                                            html.Span(className="q1-line"))
+                                ]),
+                                html.Tr([html.Td(className="right", children=["Third quartile:"]),
+                                         html.Td(id="q3_2"),
+                                         html.Td(
+                                            html.Span(className="q3-line"))
+                                ]),
+                                html.Tr([html.Td(className="right", children=["Interquartile range:"]),
+                                         html.Td(id="iqr2")
+                                ])
+                            ])
+                        ])
+                    ], id="card2", style={"margin": "auto"})
+                ], class_name="justify-content-center", id="collapse2", is_open=False)
+            ], xs=12, sm=12, md=12, lg=6, xl=6, style={"margin": "auto"})
+    ]),
     dbc.Row([
         dbc.Col([
             dcc.Graph(id="output-hist1")
@@ -79,3 +139,5 @@ app.layout = dbc.Container([
         ], xs=12, sm=12, md=12, lg=6, xl=6)
     ])
 ])
+
+# , xs=6, sm=6, md=6, lg=6, xl=6
