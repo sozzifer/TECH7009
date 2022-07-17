@@ -74,7 +74,7 @@ app.layout = dbc.Container([
                         ])
                     ], id="card1", style={"margin": "auto"})
                 ], class_name="justify-content-center", id="collapse1", is_open=False)
-            ], xs=12, sm=12, md=12, lg=6, xl=6, style={"margin": "auto"}),
+            ], xs=8, sm=8, md=6, lg=6, xl=6, style={"margin": "auto"}),
             dbc.Col([
                 dbc.Collapse([
                     dbc.Card([
@@ -120,7 +120,7 @@ app.layout = dbc.Container([
                         ])
                     ], id="card2", style={"margin": "auto"})
                 ], class_name="justify-content-center", id="collapse2", is_open=False)
-            ], xs=12, sm=12, md=12, lg=6, xl=6, style={"margin": "auto"})
+            ], xs=8, sm=8, md=6, lg=6, xl=6, style={"margin": "auto"})
     ]),
     dbc.Row([
         dbc.Col([

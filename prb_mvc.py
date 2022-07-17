@@ -58,11 +58,11 @@ def generate_winner(n_clicks, total, num):
         if num > total:
             return "Tickets bought must be fewer that total tickets", "", "", ""
         else:
-            my_tickets = random.sample(range(1, int(total) + 1), int(num))
-            winning_ticket = np.random.randint(1, int(total) + 1, size=(1))
             probability = round((num/total)*100, 2)
+            my_tickets = random.sample(range(1, int(total) + 1), int(num))
             string_tickets = [str(x) for x in my_tickets]
             my_tickets_string = ", ".join(string_tickets)
+            winning_ticket = np.random.randint(1, int(total) + 1, size=(1))
             winner = False
             for ticket in my_tickets:
                 if ticket == winning_ticket:

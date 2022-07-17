@@ -4,3 +4,4 @@ venv
 .DS_Store
 out.html
 plotly_go.py
+scratch.py
