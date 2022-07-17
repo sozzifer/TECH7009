@@ -11,7 +11,7 @@ app = Dash(__name__,
 app.layout = dbc.Container([
     dbc.Row([
         html.H1("Summarising and illustrating data")
-    ], style={"padding": 20}),
+    ]),
     dbc.Row([
         html.P("The Happy dataset contains 1170 responses to a questionnaire about students' levels of happiness on a scale of 0 to 28, as well as the student's sex, if they are a UK student or not, and whether they consider themselves to be extroverted/introverted, absorbed and bored. Select a categorical variable from the dropdown list below to compare total happiness for different groups.")
     ]),
@@ -51,7 +51,7 @@ app.layout = dbc.Container([
                                          html.Td(
                                             html.Span(className="median-line"))
                                 ]),
-                                html.Tr([html.Td(className="right", children=["Standard deviation:"]),
+                                html.Tr([html.Td(className="right", children=["Standard deviation (SD):"]),
                                          html.Td(
                                              id="std1", children=[]),
                                          html.Td(
@@ -98,17 +98,17 @@ app.layout = dbc.Container([
                                          html.Td(
                                             html.Span(className="median-line"))
                                 ]),
-                                html.Tr([html.Td(className="right", children=["Standard deviation:"]),
+                                html.Tr([html.Td(className="right", children=["Standard deviation (SD):"]),
                                          html.Td(id="std2"),
                                          html.Td(
                                             html.Span(className="std-line"))
                                 ]),
-                                html.Tr([html.Td(className="right", children=["First quartile:"]),
+                                html.Tr([html.Td(className="right", children=["First quartile (Q1):"]),
                                          html.Td(id="q1_2"),
                                          html.Td(
                                             html.Span(className="q1-line"))
                                 ]),
-                                html.Tr([html.Td(className="right", children=["Third quartile:"]),
+                                html.Tr([html.Td(className="right", children=["Third quartile (Q3):"]),
                                          html.Td(id="q3_2"),
                                          html.Td(
                                             html.Span(className="q3-line"))
