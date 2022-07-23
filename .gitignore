@@ -5,3 +5,7 @@ venv
 out.html
 plotly_go.py
 scratch.py
+clicks.py
+charm_*.py
+prb_mvc*.py
+hap.py
