@@ -3,7 +3,7 @@ import dash_bootstrap_components as dbc
 import plotly.express as px
 import pandas as pd
 
-happy_df = pd.read_csv("data/happy.csv")
+happy_df = pd.read_csv("data/dis_happy.csv")
 
 app = Dash(__name__,
            title="Total happiness",
