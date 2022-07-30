@@ -1,4 +1,4 @@
-from dash import Input, Output, State
+from dash import html, Input, Output, State
 import plotly.express as px
 from dis_view import app
 import dis_model
@@ -16,50 +16,78 @@ stat_colours = {
 
 
 @app.callback(
-    Output("category1", "children"),
-    Output("category2", "children"),
-    Output("group1", "children"),
-    Output("group2", "children"),
-    Output("n1", "children"),
-    Output("n2", "children"),
-    Output("mean1", "children"),
-    Output("std1", "children"),
-    Output("q1_1", "children"),
-    Output("median1", "children"),
-    Output("q3_1", "children"),
-    Output("iqr1", "children"),
-    Output("mean2", "children"),
-    Output("std2", "children"),
-    Output("q1_2", "children"),
-    Output("median2", "children"),
-    Output("q3_2", "children"),
-    Output("iqr2", "children"),
+    Output("desc1", "children"),
+    Output("desc2", "children"),
     Input("cols-dropdown", "value")
 )
 def update_statistics(value):
     categories, stats_df1, stats_df2 = dis_model.get_df(value)
-    n1, mean1, std1, q1_1, median1, q3_1, iqr1 = dis_model.get_stats(stats_df1)
-    n2, mean2, std2, q1_2, median2, q3_2, iqr2 = dis_model.get_stats(stats_df2)
     group1 = categories[0]
     group2 = categories[1]
-    return f"{value}:", f"{value}:", group1, group2, n1, n2, mean1, u"\u00B1" + str(std1), q1_1, median1, q3_1, iqr1, mean2, u"\u00B1" + str(std2), q1_2, median2, q3_2, iqr2
+    n1, mean1, std1, q1_1, median1, q3_1, iqr1 = dis_model.get_stats(stats_df1)
+    n2, mean2, std2, q1_2, median2, q3_2, iqr2 = dis_model.get_stats(stats_df2)
+    f_std1 = u"\u00B1" + str(std1)
+    f_std2 = u"\u00B1" + str(std2)
+    return [html.Thead([html.Th(children=[f"{value}"], className="right"),
+                        html.Th(children=[f"{group1}"]),
+                        html.Th(children=["Key"])]),
+            html.Tr([html.Td(children=["Sample size:"], className="right"),
+                     html.Td(children=[f"{n1}"])]),
+            html.Td(children=[]),
+            html.Tr([html.Td(children=["Mean:"], className="right"),
+                     html.Td(children=[f"{mean1}"]),
+                     html.Td(html.Span(className="mean-key"))]),
+            html.Tr([html.Td(children=["Median:"], className="right"),
+                     html.Td(children=[f"{median1}"]),
+                     html.Td(html.Span(className="median-key"))]),
+            html.Tr([html.Td(children=["Standard deviation:"], className="right"),
+                     html.Td(children=[f_std1]),
+                     html.Td(html.Span(className="std-key"))]),
+            html.Tr([html.Td(children=["First quartile (Q1):"], className="right"),
+                     html.Td(children=[f"{q1_1}"]),
+                     html.Td(html.Span(className="q1-key"))]),
+            html.Tr([html.Td(children=["Third quartile (Q3):"], className="right"),
+                     html.Td(children=[f"{q3_1}"]),
+                     html.Td(html.Span(className="q3-key"))]),
+            html.Tr([html.Td(children=["Interquartile range:"], className="right"),
+                     html.Td(children=[f"{iqr1}"]),
+                     html.Td(children=[])])],\
+        [html.Thead([html.Th(children=[f"{value}"], className="right"),
+                     html.Th(children=[f"{group2}"]),
+                     html.Th(children=["Key"])]),
+         html.Tr([html.Td(children=["Sample size:"], className="right"),
+                  html.Td(children=[f"{n2}"])]),
+         html.Td(children=[]),
+         html.Tr([html.Td(children=["Mean:"], className="right"),
+                  html.Td(children=[f"{mean2}"]),
+                  html.Td(html.Span(className="mean-key"))]),
+         html.Tr([html.Td(children=["Median:"], className="right"),
+                  html.Td(children=[f"{median2}"]),
+                  html.Td(html.Span(className="median-key"))]),
+         html.Tr([html.Td(children=["Standard deviation:"], className="right"),
+                  html.Td(children=[f_std2]),
+                  html.Td(html.Span(className="std-key"))]),
+         html.Tr([html.Td(children=["First quartile (Q1):"], className="right"),
+                  html.Td(children=[f"{q1_2}"]),
+                  html.Td(html.Span(className="q1-key"))]),
+         html.Tr([html.Td(children=["Third quartile (Q3):"], className="right"),
+                  html.Td(children=[f"{q3_2}"]),
+                  html.Td(html.Span(className="q3-key"))]),
+         html.Tr([html.Td(children=["Interquartile range:"], className="right"),
+                  html.Td(children=[f"{iqr2}"]),
+                  html.Td(children=[])])]
 
 
 def format_histogram(df, fig):
     scatter_range = list(range(0, 93))
     _, mean, std, q1, median, q3, _ = dis_model.get_stats(df)
 
-    fig.update_layout(margin=dict(t=10, b=10),
-                      modebar_remove=["autoscale",
-                                      "pan",
-                                      "lasso",
-                                      "select",
-                                      "zoom",
-                                      "zoomin",
-                                      "zoomout",
-                                      "resetscale",
-                                      "toimage"],
-                      height=300)
+    fig.update_layout(xaxis2=dict(matches='x',
+                                  layer="above traces",
+                                  overlaying="x"),
+                      margin=dict(t=10, b=20),
+                      height=300,
+                      xaxis={"side": "top"})
     fig.update_xaxes(range=[0, 28.5],
                      dtick=7,
                      tick0=7)
@@ -119,8 +147,8 @@ def hist_hovertext(df):
 
 
 @app.callback(
-    Output("output-hist1", "figure"),
-    Output("output-hist2", "figure"),
+    Output("graph-hist1", "figure"),
+    Output("graph-hist2", "figure"),
     Input("cols-dropdown", "value")
 )
 def update_histogram(value):
@@ -128,6 +156,7 @@ def update_histogram(value):
 
     fig1 = go.Figure(
         go.Histogram(x=hist_df1,
+                     xaxis="x2",
                      customdata=hist_hovertext(hist_df1),
                      hovertemplate="Total happiness score: %{x}" + "<br>Count: %{y}" +
                      "<br>Proportion: %{customdata}%<extra></extra>",
@@ -135,6 +164,7 @@ def update_histogram(value):
     )
     fig2 = go.Figure(
         go.Histogram(x=hist_df2,
+                     xaxis="x2",
                      customdata=hist_hovertext(hist_df2),
                      hovertemplate="Total happiness score: %{x}" + "<br>Count: %{y}" +
                      "<br>Proportion: %{customdata}%<extra></extra>",
@@ -218,16 +248,8 @@ def format_boxplot(df, fig, color):
                                   layer="above traces",
                                   overlaying="x"),
                       margin=dict(t=10, b=10),
-                      modebar_remove=["autoscale",
-                                      "pan",
-                                      "lasso",
-                                      "select",
-                                      "zoom",
-                                      "zoomin",
-                                      "zoomout",
-                                      "resetscale",
-                                      "toimage"],
-                      height=300)
+                      height=300,
+                      xaxis={"side": "top"})
     fig.update_xaxes(range=[0, 28.5],
                      dtick=7,
                      tick0=7)
@@ -238,8 +260,8 @@ def format_boxplot(df, fig, color):
 
 
 @app.callback(
-    Output("output-box1", "figure"),
-    Output("output-box2", "figure"),
+    Output("graph-box1", "figure"),
+    Output("graph-box2", "figure"),
     Input("cols-dropdown", "value")
 )
 def update_boxplot(value):
@@ -253,6 +275,22 @@ def update_boxplot(value):
     format_boxplot(box_df1, fig1, stat_colours["grp1"])
     format_boxplot(box_df2, fig2, stat_colours["grp2"])
     return fig1, fig2
+
+
+@app.callback(
+    Output("text-hist1", "children"),
+    Output("text-hist2", "children"),
+    Output("text-box1", "children"),
+    Output("text-box2", "children"),
+    Input("cols-dropdown", "value")
+)
+def graph_alt_text(value):
+    categories, _, _ = dis_model.get_df(value)
+    hist_text1 = f"Histogram of Total happiness for {value} = {categories[0]}"
+    hist_text2 = f"Histogram of Total happiness for {value} = {categories[1]}"
+    box_text1 = f"Boxplot of Total happiness for {value} = {categories[0]}"
+    box_text2 = f"Boxplot of Total happiness for {value} = {categories[1]}"
+    return hist_text1, hist_text2, box_text1, box_text2
 
 
 @app.callback(

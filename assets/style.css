@@ -17,14 +17,17 @@
     font-family: "Regular";
     src: url("OpenSans-Regular.ttf");
 }
+
 @font-face {
     font-family: "SemiBold";
     src: url("OpenSans-SemiBold.ttf");
 }
+
 @font-face {
     font-family: "ExtraBold";
     src: url("OpenSans-ExtraBold.ttf");
 }
+
 body {
     font-family: "Regular", sans-serif;
     margin: 20px auto;
@@ -43,51 +46,73 @@ h3 {
     text-align: center;
     margin: 0 auto 4px
 }
+
 table.desc {
     margin: 0 auto
 }
 
-td, th {
+td,
+th {
     padding: 2px 5px
 }
 
-td.right, th.right {
-        font-family: "SemiBold", sans-serif;
-        text-align: right;
+td.right,
+th.right {
+    font-family: "SemiBold", sans-serif;
+    text-align: right;
 }
 
-#collapse1, #collapse2 {
+#hist-row,
+#box-row {
+    margin: 10px
+}
+
+#collapse1,
+#collapse2 {
     margin: 10px auto
 }
 
 #toggle {
     margin: 10px;
     background-color: #003896;
-    width: 200px
+    width: 250px
 }
 
-.mean-line {
+.mean-key {
     border-top: 3px solid var(--gold);
     display: block;
     width: 30px
 }
-.median-line {
+
+.median-key {
     border-top: 3px solid var(--green);
     display: block;
     width: 30px
 }
-.std-line {
+
+.std-key {
     border-top: 3px solid var(--aqua);
     display: block;
     width: 30px
 }
-.q1-line {
+
+.q1-key {
     border-top: 3px solid var(--red);
     display: block;
     width: 30px
 }
-.q3-line {
+
+.q3-key {
     border-top: 3px solid var(--red);
     display: block;
     width: 30px
+}
+
+.sr-only {
+    position: absolute;
+    left: -10000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
 }

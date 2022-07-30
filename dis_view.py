@@ -17,127 +17,88 @@ app.layout = dbc.Container([
     ]),
     dbc.Row([
         dbc.Col([
-            dcc.Dropdown(id="cols-dropdown",
-                         options=[{"label": x, "value": x}
-                                  for x in happy_df.columns[1:]],
-                         value="Sex",
-                         clearable=False)
-        ], style={"margin":"auto"}, xs=12, sm=3, md=3, lg=3, xl=3)
-    ], class_name="justify-content-center"),
+            html.Div([
+                dcc.Dropdown(id="cols-dropdown",
+                             options=[{"label": x, "value": x}
+                                      for x in happy_df.columns[1:]],
+                             value="Sex",
+                             clearable=False)
+            ], **{"aria-live": "polite"})
+        ], xs=12, sm=3, md=3, lg=3, xl=3, style={"margin": "auto"})
+    ], className="justify-content-center"),
     dbc.Row([
-        dbc.Button("Descriptive statistics", id="toggle", n_clicks=0)
-    ], class_name="justify-content-center"),
+        dbc.Button("Toggle Descriptive statistics", id="toggle", n_clicks=0)
+    ], className="justify-content-center"),
     dbc.Row([
-            dbc.Col([
-                dbc.Collapse([
+        dbc.Col([
+            dbc.Collapse([
+                html.Div([
                     dbc.Card([
                         dbc.CardBody([
-                            html.Table(className="desc", children=[
-                                html.Thead([
-                                    html.Th(id="category1", className="right"),
-                                    html.Th(id="group1"),
-                                    html.Th(children=["Key"])
-                                ]),
-                                html.Tr([html.Td(className="right", children=["Sample size:"]),
-                                         html.Td(id="n1")
-                                ]), 
-                                html.Tr([html.Td(className="right", children=["Mean:"]),
-                                         html.Td(id="mean1"),
-                                         html.Td(
-                                            html.Span(className="mean-line"))
-                                ]),
-                                html.Tr([html.Td(className="right", children=["Median:"]),
-                                         html.Td(id="median1"),
-                                         html.Td(
-                                            html.Span(className="median-line"))
-                                ]),
-                                html.Tr([html.Td(className="right", children=["Standard deviation (SD):"]),
-                                         html.Td(
-                                             id="std1", children=[]),
-                                         html.Td(
-                                            html.Span(className="std-line"))
-                                ]),
-                                html.Tr([html.Td(className="right", children=["First quartile:"]),
-                                         html.Td(id="q1_1"),
-                                         html.Td(
-                                            html.Span(className="q1-line"))
-                                ]),
-                                html.Tr([html.Td(className="right", children=["Third quartile:"]),
-                                         html.Td(id="q3_1"),
-                                         html.Td(
-                                            html.Span(className="q3-line"))
-                                ]),
-                                html.Tr([html.Td(className="right", children=["Interquartile range:"]),
-                                         html.Td(id="iqr1")
-                                ])
-                            ])
+                            html.Table(
+                                id="desc1", className="desc", children=[])
                         ])
                     ], id="card1", style={"margin": "auto"})
-                ], class_name="justify-content-center", id="collapse1", is_open=False)
-            ], xs=8, sm=8, md=6, lg=6, xl=6, style={"margin": "auto"}),
-            dbc.Col([
-                dbc.Collapse([
+                ], **{"aria-live": "polite", "aria-atomic": "true"})
+            ], className="justify-content-center", id="collapse1", is_open=True)
+        ], style={"margin": "auto"}),
+        dbc.Col([
+            dbc.Collapse([
+                html.Div([
                     dbc.Card([
                         dbc.CardBody([
-                            html.Table(className="desc", children=[
-                                html.Thead([
-                                    html.Th(id="category2", className="right"),
-                                    html.Th(id="group2"),
-                                    html.Th(children=["Key"])
-                                ]),
-                                html.Tr([html.Td(className="right", children=["Sample size:"]),
-                                         html.Td(id="n2")
-                                ]),
-                                html.Tr([html.Td(className="right", children=["Mean:"]),
-                                         html.Td(id="mean2"),
-                                         html.Td(
-                                            html.Span(className="mean-line"))
-                                ]),
-                                html.Tr([html.Td(className="right", children=["Median:"]),
-                                         html.Td(id="median2"),
-                                         html.Td(
-                                            html.Span(className="median-line"))
-                                ]),
-                                html.Tr([html.Td(className="right", children=["Standard deviation (SD):"]),
-                                         html.Td(id="std2"),
-                                         html.Td(
-                                            html.Span(className="std-line"))
-                                ]),
-                                html.Tr([html.Td(className="right", children=["First quartile (Q1):"]),
-                                         html.Td(id="q1_2"),
-                                         html.Td(
-                                            html.Span(className="q1-line"))
-                                ]),
-                                html.Tr([html.Td(className="right", children=["Third quartile (Q3):"]),
-                                         html.Td(id="q3_2"),
-                                         html.Td(
-                                            html.Span(className="q3-line"))
-                                ]),
-                                html.Tr([html.Td(className="right", children=["Interquartile range:"]),
-                                         html.Td(id="iqr2")
-                                ])
-                            ])
+                            html.Table(
+                                id="desc2", className="desc", children=[])
                         ])
                     ], id="card2", style={"margin": "auto"})
-                ], class_name="justify-content-center", id="collapse2", is_open=False)
-            ], xs=8, sm=8, md=6, lg=6, xl=6, style={"margin": "auto"})
+                ], **{"aria-live": "polite", "aria-atomic": "true"})
+            ], className="justify-content-center", id="collapse2", is_open=True)
+        ], xs=12, sm=12, md=12, lg=6, xl=6, style={"margin": "auto"})
     ]),
     dbc.Row([
         dbc.Col([
-            dcc.Graph(id="output-hist1")
+            html.Div([
+                dcc.Graph(id="graph-hist1",
+                          config={"displayModeBar": False})
+            ], role="img"),
+            html.Div(id="text-hist1",
+                     children=[],
+                     className="sr-only",
+                     **{"aria-live": "polite"})
         ], xs=12, sm=12, md=12, lg=6, xl=6),
         dbc.Col([
-            dcc.Graph(id="output-hist2")
+            html.Div([
+                dcc.Graph(id="graph-hist2",
+                          config={"displayModeBar": False})
+            ], role="img"),
+            html.Div(id="text-hist2",
+                     children=[],
+                     className="sr-only",
+                     **{"aria-live": "polite"})
         ], xs=12, sm=12, md=12, lg=6, xl=6)
-    ]),
+    ], id="hist-row"),
     dbc.Row([
         dbc.Col([
-            dcc.Graph(id="output-box1")
+            html.Div([
+                dcc.Graph(id="graph-box1",
+                          config={"displayModeBar": False})
+            ], role="img"),
+            html.Div(id="text-box1",
+                     children=[],
+                     className="sr-only",
+                     **{"aria-live": "polite"})
         ], xs=12, sm=12, md=12, lg=6, xl=6),
         dbc.Col([
-            dcc.Graph(id="output-box2")
+            html.Div([
+                dcc.Graph(id="graph-box2",
+                          config={"displayModeBar": False})
+            ], role="img"),
+            html.Div(id="text-box2",
+                     children=[],
+                     className="sr-only",
+                     **{"aria-live": "polite"})
         ], xs=12, sm=12, md=12, lg=6, xl=6)
-    ])
+    ], id="box-row")
 ])
 
 # , xs=6, sm=6, md=6, lg=6, xl=6
