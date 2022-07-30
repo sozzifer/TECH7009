@@ -11,8 +11,7 @@ app = Dash(__name__,
 blank_fig = go.Figure(
     go.Scatter(x=[],
                y=[]),
-    layout={"margin": dict(t=20, b=10, l=20, r=20), "height": 300}
-)
+    layout={"margin": dict(t=20, b=10, l=20, r=20), "height": 300})
 
 app.layout = dbc.Container([
     dbc.Row(html.H1("Probability")),
@@ -33,6 +32,13 @@ app.layout = dbc.Container([
                       type="number",
                       min=1),
             dcc.Store(id="total-store"),
+            html.Label("Enter number draws",
+                       style={"margin": 5}),
+            dbc.Input(id="num-draws",
+                      value=1,
+                      type="number",
+                      min=1),
+            dcc.Store(id="draw-store"),
             html.Br()
         ], xs=12, sm=12, md=12, lg=4, xl=4),
         dbc.Col([

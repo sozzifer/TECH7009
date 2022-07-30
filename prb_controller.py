@@ -24,32 +24,32 @@ def generate_graph(click_store, win_store, prob_store):
 
 
 @app.callback(
-    Output("total-store", "data"),
     Output("num-store", "data"),
+    Output("total-store", "data"),
     Output("click-store", "data"),
     Output("prob-store", "data"),
     Output("win-store", "data"),
     Output("probability", "children"),
-    Output("my-tickets", "children"),
-    Output("winning-ticket", "children"),
     Output("win-rate", "children"),
     Output("draws", "children"),
+    Output("my-tickets", "children"),
+    Output("winning-ticket", "children"),
     Output("graph", "figure"),
     Input("submit", "n_clicks"),
-    State("total-tickets", "value"),
     State("num-tickets", "value"),
-    State("total-store", "data"),
     State("num-store", "data"),
+    State("total-tickets", "value"),
+    State("total-store", "data"),
     State("click-store", "data"),
+    State("prob-store", "data"),
     State("win-store", "data"),
-    State("prob-store", "data")
 )
-def update_stores(n_clicks, total, num, total_store, num_store, click_store, win_store, prob_store):
+def update_stores(n_clicks, num, num_store, total, total_store, click_store, prob_store, win_store):
     if n_clicks is None:
         raise exceptions.PreventUpdate
 
     if num > total:
-        return total_store, num_store, click_store, prob_store, win_store, "Tickets bought must be fewer than total tickets", "", "", "", "", blank_fig
+        return num_store, total_store, click_store, prob_store, win_store, "Tickets bought must be fewer than total tickets", "", "", "", "", blank_fig
 
     probability = round((num/total), 2)
 
@@ -59,7 +59,7 @@ def update_stores(n_clicks, total, num, total_store, num_store, click_store, win
         click_store = [0]
         prob_store = [0]
         win_store = [0]
-        return total_store, num_store, click_store, prob_store, win_store, f"Expected win rate: {str(int(probability*100))}%", "", "", "", "", blank_fig
+        return num_store, total_store, click_store, prob_store, win_store, f"Expected win rate: {str(int(probability*100))}%", "", "", "", "", blank_fig
     elif total != total_store or num != num_store:
         total_store = total
         num_store = num
@@ -76,12 +76,12 @@ def update_stores(n_clicks, total, num, total_store, num_store, click_store, win
             win_store.append(1)
             win_rate = round(win_store[-1]/click_store[-1], 2)
             fig = generate_graph(click_store, win_store, prob_store)
-            return total_store, num_store, click_store, prob_store, win_store, f"Expected win rate: {str(int(probability*100))}%", f"My tickets: {my_tickets_string}", f"Winning ticket: {winning_ticket[0]} - WIN", f"Observed win rate: {str(int(win_rate*100))}%", f"Number of draws: {click_store[-1]}", fig
+            return num_store, total_store, click_store, prob_store, win_store, f"Expected win rate: {str(int(probability*100))}%", f"Observed win rate: {str(int(win_rate*100))}%", f"Number of draws: {click_store[-1]}", f"My tickets: {my_tickets_string}", f"Winning ticket: {winning_ticket[0]} - WIN", fig
         else:
             win_store.append(0)
             win_rate = round(win_store[-1]/click_store[-1], 2)
             fig = generate_graph(click_store, win_store, prob_store)
-            return total_store, num_store, click_store, prob_store, win_store, f"Expected win rate: {str(int(probability*100))}%", f"My tickets: {my_tickets_string}", f"Winning ticket: {winning_ticket[0]}", f"Observed win rate: {str(int(win_rate*100))}%", f"Number of draws: {click_store[-1]}", fig
+            return num_store, total_store, click_store, prob_store, win_store, f"Expected win rate: {str(int(probability*100))}%", f"Observed win rate: {str(int(win_rate*100))}%", f"Number of draws: {click_store[-1]}", f"My tickets: {my_tickets_string}", f"Winning ticket: {winning_ticket[0]}", fig
     else:
         click_store.append(click_store[-1] + 1)
         prob_store.append(click_store[-1] * probability)
@@ -95,12 +95,12 @@ def update_stores(n_clicks, total, num, total_store, num_store, click_store, win
             win_store.append(win_store[-1] + 1)
             win_rate = round(win_store[-1]/click_store[-1], 2)
             fig = generate_graph(click_store, win_store, prob_store)
-            return total_store, num_store, click_store, prob_store, win_store, f"Expected win rate: {str(int(probability*100))}%", f"My tickets: {my_tickets_string}", f"Winning ticket: {winning_ticket[0]} - WIN", f"Observed win rate: {str(int(win_rate*100))}%", f"Number of draws: {click_store[-1]}", fig
+            return num_store, total_store, click_store, prob_store, win_store, f"Expected win rate: {str(int(probability*100))}%", f"Observed win rate: {str(int(win_rate*100))}%", f"Number of draws: {click_store[-1]}", f"My tickets: {my_tickets_string}", f"Winning ticket: {winning_ticket[0]} - WIN", fig
         else:
             win_store.append(win_store[-1])
             win_rate = round(win_store[-1]/click_store[-1], 2)
             fig = generate_graph(click_store, win_store, prob_store)
-            return total_store, num_store, click_store, prob_store, win_store, f"Expected win rate: {str(int(probability*100))}%", f"My tickets: {my_tickets_string}", f"Winning ticket: {winning_ticket[0]}", f"Observed win rate: {str(int(win_rate*100))}%", f"Number of draws: {click_store[-1]}", fig
+            return num_store, total_store, click_store, prob_store, win_store, f"Expected win rate: {str(int(probability*100))}%", f"Observed win rate: {str(int(win_rate*100))}%", f"Number of draws: {click_store[-1]}", f"My tickets: {my_tickets_string}", f"Winning ticket: {winning_ticket[0]}", fig
 
 
 if __name__ == "__main__":
