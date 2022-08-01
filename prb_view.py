@@ -15,54 +15,65 @@ blank_fig = go.Figure(
 
 app.layout = dbc.Container([
     dbc.Row(html.H1("Probability")),
-    dbc.Row(html.P('The probability of winning a raffle with n tickets, where you buy x tickets, and one winning ticket is drawn, is x/n. Enter the total number of tickets (n) and the number of tickets bought (x) in the fields below, and click "Draw" 10 times. Is the observed win rate the same as the expected win rate? What about if you click "Draw" 20 times? 50 times?')),
-    dbc.Row(children=[
+    dbc.Row(html.P('The probability of winning a raffle with n tickets, where you buy x tickets, and one winning ticket is drawn, is x/n. Enter the total number of tickets (n) and the number of tickets bought (x) in the fields below, and set the number of draws as 10. Is the observed win rate the same as the expected win rate? What about if you draw 20 times? 50 times?')),
+    dbc.Row([
+        dcc.Interval(id="interval",
+                     interval=1*500,
+                     max_intervals=0),
+        dcc.Store(id="draw-store"),
+        dcc.Store(id="win-store"),
+        dcc.Store(id="prob-store"),
+        dcc.Store(id="win-rate-store"),
+        dcc.Store(id="my-tickets-store"),
+        dcc.Store(id="winning-ticket-store"),
         dbc.Col([
-            html.Label("Enter number of tickets bought (x)",
-                       style={"margin": 5}),
+            html.Label("Enter number of tickets bought, x (max 1000)",
+                       className="label"),
             dbc.Input(id="num-tickets",
                       value=3,
                       type="number",
-                      min=1),
-            dcc.Store(id="num-store"),
-            html.Label("Enter total number of tickets (n)",
-                       style={"margin": 5}),
+                      min=1,
+                      max=1000),
+
+            html.Label("Enter total number of tickets, n (max 1000)",
+                       className="label"),
             dbc.Input(id="total-tickets",
                       value=10,
                       type="number",
-                      min=1),
-            dcc.Store(id="total-store"),
-            html.Label("Enter number draws",
-                       style={"margin": 5}),
+                      min=1,
+                      max=1000),
+
+            html.Label("Enter number of draws (max 1000)",
+                       className="label"),
             dbc.Input(id="num-draws",
-                      value=1,
+                      value=5,
                       type="number",
-                      min=1),
-            dcc.Store(id="draw-store"),
+                      min=1,
+                      max=1000),
+
             html.Br()
         ], xs=12, sm=12, md=12, lg=4, xl=4),
         dbc.Col([
-            dcc.Store(id="click-store"),
-            dcc.Store(id="prob-store"),
-            dcc.Store(id="win-store"),
-            html.Button(id="submit",
+            html.Button(id="draw",
                         n_clicks=0,
                         children="Draw"),
             html.Br(),
             html.Br(),
-            html.P(id="probability"),
-            html.P(id="win-rate"),
-            html.P(id="draws")
+
+            html.P(id="probability", children=[]),
+            html.P(id="win-rate", children=[]),
+            html.P(id="draws", children=[])
+
         ], xs=12, sm=12, md=6, lg=4, xl=4),
         dbc.Col([
             html.P(id="my-tickets"),
             html.P(id="winning-ticket")
         ], xs=12, sm=12, md=6, lg=4, xl=4)
-    ], class_name="justify-content-center"),
+    ]),
     dbc.Row([
         dcc.Graph(id="graph",
                   figure=blank_fig,
                   config={"displayModeBar": False}
                   )
-    ], class_name="justify-content-center")
+    ])
 ])

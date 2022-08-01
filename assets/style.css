@@ -116,3 +116,7 @@ th.right {
     height: 1px;
     overflow: hidden;
 }
+
+.label {
+    margin: 5px
+}
