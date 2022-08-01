@@ -1,7 +1,7 @@
 import plotly.graph_objects as go
 from dash import Input, Output, State, exceptions
-from prb_view2 import app, blank_fig
-from prb_model2 import generate_draws
+from prb_view import app, blank_fig
+from prb_model import generate_draws
 
 
 @app.callback(
