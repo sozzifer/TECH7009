@@ -1,4 +1,4 @@
-from dash import Dash, html, dcc, Input, Output, State, exceptions, dash_table
+from dash import Dash, html, dcc, Input, Output, State, exceptions, dash_table, no_update
 import dash_bootstrap_components as dbc
 import plotly.express as px
 import plotly.graph_objects as go
@@ -8,6 +8,7 @@ import scipy.stats as stat
 
 app = Dash(__name__,
            title="Normal distribution",
+           update_title=None,
            external_stylesheets=[dbc.themes.BOOTSTRAP],
            meta_tags=[{"name": "viewport",
                        "content": "width=device-width,\
@@ -25,7 +26,7 @@ app.layout = dbc.Container([
             dcc.Graph(id="normal-dist-fig", style={"height": 300})
         ], xs=12, sm=12, md=12, lg=6, xl=6),
         dbc.Col([
-            html.P("Z calculation here")
+            html.P(id="z-calc")
         ], id="z-output", xs=12, sm=12, md=12, lg=6, xl=6, style={"display": "none"})
     ]),
     dbc.Row([
@@ -36,6 +37,7 @@ app.layout = dbc.Container([
             dcc.Input(id="mu",
                       value=0,
                       type="number"),
+            dcc.Store(id="mu-store"),
             html.Br(),
             html.Br(),
             html.Label("Standard deviation: "),
@@ -43,6 +45,7 @@ app.layout = dbc.Container([
             dcc.Input(id="sigma",
                       value=1,
                       type="number"),
+            dcc.Store(id="sigma-store"),
             html.Br(),
             html.Br(),
             html.Button(id="submit",
@@ -53,22 +56,38 @@ app.layout = dbc.Container([
             html.Br(),
             html.Label("Calculation type: "),
             html.Br(),
-            dcc.Dropdown(id="calc-type", options=[{"label": "< (less than)", "value": "<"}, {
-                         "label": "> (greater than)", "value": ">"}, {"label": "= (equal to)", "value": "="}], value=None),
+            dcc.RadioItems(id="calc-type",
+                           options=[
+                            {"label": "  Z < z1", "value": "<"},
+                            {"label": "  Z > z1", "value": ">"},
+                            {"label": "  z1 < Z < z2", "value": "<>"},
+                            {"label": "  Z < z1 or Z > z2", "value": "><"}
+                           ],
+                           value=None,
+                           labelStyle={"display": "block"}),
             html.Br(),
-            html.Label("Z value: "),
+            html.Label("First Z value, z1: "),
             html.Br(),
-            dcc.Input(id="z-value", type="number", value=None)
+            dcc.Input(id="z-value1", type="number", value=None, disabled=True),
+            html.Br(),
+            html.Label("Second Z value, z2: "),
+            html.Br(),
+            dcc.Input(id="z-value2", type="number", value=None, disabled=True),
+            html.Br(),
+            html.Br(),
+            html.Button(id="calculate",
+                        n_clicks=0,
+                        children="Calculate")
         ], id="z-input", style={"display": "none"})
-    ]),
-    dbc.Row(id="data-table", children=[])
+    ])
 ])
 
 
 @app.callback(
     Output("normal-dist-fig", "figure"),
     Output("z-input", "style"),
-    Output("data-table", "children"),
+    Output("mu-store", "data"),
+    Output("sigma-store", "data"),
     Input("submit", "n_clicks"),
     State("mu", "value"),
     State("sigma", "value"),
@@ -77,36 +96,58 @@ def generate_normal_dist(n_clicks, mu, sigma):
     if not n_clicks:
         raise exceptions.PreventUpdate
     else:
-        df = pd.DataFrame({"x_range": np.linspace(stat.norm(loc=mu, scale=sigma).ppf(
-            0.0001), stat.norm(loc=mu, scale=sigma).ppf(0.9999), 10000)})
-        df["norm_x"] = stat.norm(loc=mu, scale=sigma).pdf(df["x_range"])
-        df["z_score"] = stat.zscore(df["x_range"])
-        df_dict=df.to_dict("records")
-        print(df["x_range"].mean())
-        print(df["x_range"].std())
-        # print(df["norm_x"])
-        # print(df["z_score"])
-
-        fig1 = px.scatter(x=df["x_range"], y=df["norm_x"])
-    return fig1, {"display": "inline"}, html.Div([
-        dash_table.DataTable(data=df_dict,
-                             columns=[{"name": i, "id": i}
-                                      for i in df.columns],
-                             export_format="csv")
-    ])
+        x = np.linspace(stat.norm(loc=mu, scale=sigma).ppf(0.0001),\
+                        stat.norm(loc=mu, scale=sigma).ppf(0.9999),\
+                        10000)
+        norm_x = stat.norm(loc=mu, scale=sigma).pdf(x)
+        fig = px.scatter(x=x, y=norm_x)
+    return fig, {"display": "inline"}, mu, sigma
 
 
 @app.callback(
-    Output("z-output", "style"),
+    Output("z-value1", "disabled"),
+    Output("z-value2", "disabled"),
     Input("calc-type", "value"),
-    Input("z-value", "value")
+    prevent_initial_call=True
 )
-def z_calculation(calc_type, z):
-    if calc_type is None or z is None:
+def display_z_inputs(calc_type):
+    if calc_type is None:
+        raise exceptions.PreventUpdate
+    if calc_type == "<>" or calc_type == "><":
+        return False, False
+    else:
+        return False, True
+
+
+@app.callback(
+    Output("z-calc", "children"),
+    Output("z-output", "style"),
+    Input("calculate", "n_clicks"),
+    State("calc-type", "value"),
+    State("z-value1", "value"),
+    State("z-value2", "value"),
+    State("mu-store", "data"),
+    State("sigma-store", "data"),
+    prevent_initial_call=True
+)
+def z_calculation(n_clicks, calc_type, z1, z2, mu, sigma):
+    if n_clicks is None:
         raise exceptions.PreventUpdate
     else:
-        return {"display": "inline"}
-
+        if calc_type == "<":
+            x = stat.norm(loc=mu, scale=sigma).cdf(z1)
+        elif calc_type == ">":
+            x = 1 - stat.norm(loc=mu, scale=sigma).cdf(z1)
+        elif calc_type == "<>":
+            max_z = max(z1, z2)
+            min_z = min(z1, z2)
+            x = stat.norm(loc=mu, scale=sigma).cdf(max_z) - \
+                stat.norm(loc=mu, scale=sigma).cdf(min_z)
+        else:
+            z_calc1 = stat.norm(loc=mu, scale=sigma).cdf(z1)
+            z_calc2 = 1 - stat.norm(loc=mu, scale=sigma).cdf(z2)
+            x = z_calc1 + z_calc2
+        return x, {"display": "inline"}
 
 if __name__ == "__main__":
-    app.run_server(debug=True)
+    app.run(debug=True)

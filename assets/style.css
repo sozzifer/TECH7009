@@ -34,6 +34,10 @@ body {
     background-color: var(--ltgrey);
 }
 
+.container {
+    width: 100%
+}
+
 h1 {
     font-family: "ExtraBold", sans-serif;
     text-align: center;
@@ -72,7 +76,7 @@ th.right {
     margin: 10px auto
 }
 
-#toggle {
+#toggle, #draw, #stop {
     margin: 10px;
     background-color: #003896;
     width: 250px
@@ -119,4 +123,17 @@ th.right {
 
 .label {
     margin: 5px
+}
+
+#graph {
+    margin: 20px auto
+}
+
+#error {
+    font-weight: bold;
+    display: none;
+}
+
+#calc-type {
+    display: block;
 }

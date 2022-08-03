@@ -3,7 +3,8 @@ import dash_bootstrap_components as dbc
 from dis_model import happy_df
 
 app = Dash(__name__,
-           title="Total happiness",
+           title="Summarising and illustrating data",
+           update_title=None,
            external_stylesheets=[dbc.themes.BOOTSTRAP],
            meta_tags=[{"name": "viewport",
                        "content": "width=device-width, initial-scale=1.0, maximum-scale=1.0"}])

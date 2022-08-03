@@ -307,4 +307,4 @@ def toggle(n_clicks, is_open1, is_open2):
 
 
 if __name__ == "__main__":
-    app.run_server(debug=True)
+    app.run(debug=True)

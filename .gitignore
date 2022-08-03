@@ -7,7 +7,9 @@ plotly_go.py
 scratch.py
 clicks.py
 charm_*
+graphing.py
 prb_mvc*
+prb_tree.py
 hap.py
 intervals*
 prb_loop.py
