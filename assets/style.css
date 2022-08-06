@@ -43,7 +43,6 @@ h1 {
     text-align: center;
     padding: 0px 20px
 }
-
 h3 {
     font-family: "SemiBold", sans-serif;
     font-size: 18px;
@@ -51,15 +50,18 @@ h3 {
     margin: 0 auto 4px
 }
 
+/* table {
+    border: 1px solid;
+    border-collapse: collapse;
+} */
 table.desc {
     margin: 0 auto
 }
-
 td,
 th {
-    padding: 2px 5px
+    padding: 2px 5px;
+    /* border: 1px solid; */
 }
-
 td.right,
 th.right {
     font-family: "SemiBold", sans-serif;
@@ -136,4 +138,8 @@ th.right {
 
 #calc-type {
     display: block;
+}
+
+input:invalid {
+    outline: solid var(--pink)
 }

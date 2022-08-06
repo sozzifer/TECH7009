@@ -83,13 +83,12 @@ def update_stores(n_clicks_draw, n_clicks_stop, num, total, draws):
 def update_graph(n_intervals, draw_list, win_list, prob_list, win_rate, my_tickets_list, winning_ticket_list):
     try:
         fig = go.Figure(
-            go.Scatter(x=[],
-                    y=[]),
-            layout={"margin": dict(t=20, b=10, l=20, r=20),
-                    "height": 300,
-                    "xaxis_title": "Number of draws",
-                    "yaxis_title": "Wins",
-                    "font_size": 14})
+            go.Scatter(x=[], y=[]),
+                       layout={"margin": dict(t=20, b=10, l=20, r=20),
+                               "height": 300,
+                               "xaxis_title": "Number of draws",
+                               "yaxis_title": "Wins",
+                               "font_size": 14})
         fig.update_xaxes(range=[-0.1, len(draw_list)-0.9])
         fig.update_yaxes(range=[-0.1, max(win_list[-1]+0.1, prob_list[-1]+0.1)])
         fig.add_trace(
