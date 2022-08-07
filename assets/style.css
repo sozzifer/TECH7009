@@ -41,7 +41,13 @@ body {
 h1 {
     font-family: "ExtraBold", sans-serif;
     text-align: center;
-    padding: 0px 20px
+    padding: 20px
+}
+h2 {
+    font-family: "SemiBold", sans-serif;
+    /* font-size: 18px; */
+    /* margin: 0 auto 4px; */
+    padding: 10px
 }
 h3 {
     font-family: "SemiBold", sans-serif;
@@ -50,17 +56,12 @@ h3 {
     margin: 0 auto 4px
 }
 
-/* table {
-    border: 1px solid;
-    border-collapse: collapse;
-} */
 table.desc {
     margin: 0 auto
 }
 td,
 th {
     padding: 2px 5px;
-    /* border: 1px solid; */
 }
 td.right,
 th.right {
@@ -102,13 +103,7 @@ th.right {
     width: 30px
 }
 
-.q1-key {
-    border-top: 3px solid var(--red);
-    display: block;
-    width: 30px
-}
-
-.q3-key {
+.q1-key, .q3-key {
     border-top: 3px solid var(--red);
     display: block;
     width: 30px
@@ -127,6 +122,26 @@ th.right {
     margin: 5px
 }
 
+.rc-slider-track {
+    background-color: var(--blue);
+}
+.rc-slider-dot-active {
+    border-color: var(--blue);
+    border: solid 2px var(--blue);
+}
+.rc-slider-handle {
+    background-color: var(--blue);
+    border-color: var(--blue);
+}
+.rc-slider-handle:hover {
+    border-color: var(--blue);
+}
+.rc-slider-handle-active:active {
+    border-color: var(--blue);
+}
+.rc-slider-mark-text {
+    font-size: 14px;
+}
 #graph {
     margin: 20px auto
 }

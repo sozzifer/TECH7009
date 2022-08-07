@@ -16,7 +16,7 @@ app = Dash(__name__,
 app.layout = dbc.Container([
     dbc.Row([
         html.H1("Normal distribution")
-    ], style={"padding": 20}),
+    ]),
     dbc.Row([
         dbc.Col([
             html.P("This tool will allow you to view the area under the normal distribution curve  for different values of z1 and z2. To use standard units, set the mean as 0 and the standard deviation as 1. Select a calculation type and enter values for z1 and z2 as indicated. The shaded area represents the probability that Z satisfies the given conditions.")

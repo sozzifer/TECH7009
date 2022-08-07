@@ -1,4 +1,4 @@
-from dash import Dash, html, dcc, Input, Output, State, exceptions
+from dash import Dash, html, dcc, Input, Output, State, exceptions, no_update
 import dash_bootstrap_components as dbc
 import plotly.express as px
 import plotly.graph_objects as go
@@ -13,7 +13,16 @@ app = Dash(__name__,
            meta_tags=[{"name": "viewport",
                        "content": "width=device-width, initial-scale=1.0, maximum-scale=1.0"}])
 
-app.layout = dbc.Container()
+app.layout = dbc.Container(
+    dbc.Row([
+        html.H1("Title")
+    ], style={"padding": 20}),
+    dbc.Row([
+        dbc.Col([
+
+        ], xs=12, sm=12, md=12, lg=12, xl=12)
+    ])
+)
 
 
 if __name__ == "__main__":
