@@ -1,11 +1,6 @@
-from dash import Dash, html, dcc, Input, Output, State, exceptions, no_update
+from dash import Dash, html, dcc
 import dash_bootstrap_components as dbc
-import plotly.express as px
-import plotly.graph_objects as go
-import pandas as pd
-import numpy as np
-import scipy.stats as stat
-from eci_model import get_df_qual, get_df_quant, df_qual, df_quant
+from eci_model import df_qual, df_quant
 
 app = Dash(__name__,
            title="Confidence Intervals",
@@ -87,6 +82,9 @@ app.layout = dbc.Container([
                                             value="sex",
                                             clearable=False)],
                      **{"aria-live": "polite"}),
+            html.Br(),
+            html.Label("Category"),
+            dbc.RadioItems(id="cat-radio", options=[]),
             html.Br()
         ], xs=12, sm=12, md=2, lg=2, xl=2),
         dbc.Col([

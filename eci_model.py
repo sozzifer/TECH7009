@@ -1,10 +1,4 @@
-from dash import Dash, html, dcc, Input, Output, State, exceptions, no_update
-import dash_bootstrap_components as dbc
-import plotly.express as px
-import plotly.graph_objects as go
 import pandas as pd
-import numpy as np
-import scipy.stats as stat
 
 df_quant = pd.read_csv("data/happy_quant.csv")
 df_qual = pd.read_csv("data/happy_qual.csv")
@@ -17,14 +11,16 @@ qual_y_range = {"tothappy": 130,
                 "bmi": 80}
 
 
-def get_df_qual(value):
-    df = df_qual[value].dropna().reset_index(drop=True)
-    categories = df.unique()
+def get_df_qual(value, category):
+    df1 = df_qual[value][(df_qual[value] == category)].dropna().reset_index(drop=True)
+    df2 = df_qual[value][(df_qual[value] != category)].dropna().reset_index(drop=True)
+    cat1 = df1[0]
+    cat2 = df2[0]
     x = ["Observed", "Expected"]
-    y1 = df[(df == categories[0])].count()
-    y2 = df[(df == categories[1])].count()
-    expected_y = df.count()/2
-    return x, y1, y2, expected_y, categories[0], categories[1]
+    y1 = df1.count()
+    y2 = df2.count()
+    expected_y = (y1+y2)/2
+    return x, y1, y2, expected_y, cat1, cat2
 
 
 def get_df_quant(value):

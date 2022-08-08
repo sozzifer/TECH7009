@@ -1,13 +1,10 @@
-from dash import Dash, html, dcc, Input, Output, State, exceptions, no_update
-import dash_bootstrap_components as dbc
-import plotly.express as px
+from dash import Input, Output
 import plotly.graph_objects as go
-import pandas as pd
 import numpy as np
 import scipy.stats as stat
 import statsmodels.stats.proportion as statmod
 from eci_view import app
-from eci_model import get_df_qual, get_df_quant, df_qual, df_quant, qual_y_range
+from eci_model import get_df_qual, get_df_quant, df_qual, qual_y_range
 
 
 @app.callback(
@@ -64,6 +61,19 @@ def add_ci_lines(fig, value, ci_lower, ci_upper):
 
 
 @app.callback(
+    Output("cat-radio", "options"),
+    Output("cat-radio", "value"),
+    Input("qual-dropdown", "value")
+)
+def set_categories(value):
+    df = df_qual[value]
+    categories = df.unique()
+    cat1 = categories[0]
+    cat2 = categories[1]
+    return [{"label": cat1, "value": cat1}, {"label": cat2, "value": cat2}], cat1
+
+
+@app.callback(
     Output("qual-bar", "figure"),
     Output("qual-proportion1", "children"),
     Output("qual-proportion2", "children"),
@@ -71,10 +81,11 @@ def add_ci_lines(fig, value, ci_lower, ci_upper):
     Output("qual-conf-int", "children"),
     Output("qual-conf-level", "children"),
     Input("qual-dropdown", "value"),
-    Input("qual-conf-value", "value")
+    Input("qual-conf-value", "value"),
+    Input("cat-radio", "value")
 )
-def update_bar(value, conf_level):
-    x, y1, y2, expected_y, cat1, cat2 = get_df_qual(value)
+def update_bar(value, conf_level, category):
+    x, y1, y2, expected_y, cat1, cat2 = get_df_qual(value, category)
     y1_val = [y1, expected_y]
     y2_val = [y2, expected_y]
     conf_percent = conf_level*100
