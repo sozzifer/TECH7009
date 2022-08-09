@@ -12,6 +12,7 @@ from nor_model import stat_colours
     Output("current-mu", "children"),
     Output("current-sigma", "children"),
     Output("probability", "children"),
+    Output("sr-norm", "children"),
     Input("submit", "n_clicks"),
     State("mu", "value"),
     State("sigma", "value"),
@@ -37,11 +38,12 @@ def update_graph(n_clicks, mu, sigma, calc_type, z1, z2):
                     "height": 400,
                     "font_size": 14})
         if calc_type is None:
-            return fig, {"display": "inline"}, "Please select a calculation type", "", ""
+            return fig, {"display": "inline"}, "Please select a calculation type", "", "", ""
         elif calc_type == "<" or calc_type == ">":
             if z1 is None:
-                return fig, {"display": "inline"}, "Please enter a value for z1", "", ""
+                return fig, {"display": "inline"}, "Please enter a value for z1", "", "", ""
             else:
+                sr_norm = f"Normal distribution graph with mean {mu}, standard deviation {sigma} and z1 = {z1}"
                 x1 = stat.norm(mu, sigma).cdf(z1)
                 custom_data = (x1,) * 10000
                 # print(customdata)
@@ -80,10 +82,11 @@ def update_graph(n_clicks, mu, sigma, calc_type, z1, z2):
                     empirical_rule(fig, mu, sigma, norm_x)
         elif calc_type == "<>" or calc_type == "><":
             if z1 is None or z2 is None:
-                return fig, {"display": "inline"}, "Please enter values for z1 and z2", "", ""
+                return fig, {"display": "inline"}, "Please enter values for z1 and z2", "", "", ""
             if z1 > z2:
-                return fig, {"display": "inline"}, "z1 must be less than z2", "", ""
+                return fig, {"display": "inline"}, "z1 must be less than z2", "", "", ""
             else:
+                sr_norm = f"Normal distribution with mean {mu}, standard deviation {sigma}, z1 = {z1} and z2 = {z2}"
                 if calc_type == "<>":
                     max_z = max(z1, z2)
                     min_z = min(z1, z2)
@@ -97,11 +100,11 @@ def update_graph(n_clicks, mu, sigma, calc_type, z1, z2):
                     norm_pdf = stat.norm(mu, sigma).pdf(prob_between_x1_x2)
                     fig.add_trace(
                         go.Scatter(x=prob_between_x1_x2,
-                                   y=norm_pdf,
-                                   name="Probability",
-                                   marker_color=stat_colours["norm"],
-                                   fill="tozeroy",
-                                   fillcolor=stat_colours["z"]))
+                                    y=norm_pdf,
+                                    name="Probability",
+                                    marker_color=stat_colours["norm"],
+                                    fill="tozeroy",
+                                    fillcolor=stat_colours["z"]))
                     norm_pdf1 = norm_x
                     empirical_rule(fig, mu, sigma, norm_x)
                 elif calc_type == "><":
@@ -120,21 +123,21 @@ def update_graph(n_clicks, mu, sigma, calc_type, z1, z2):
                     norm_pdf2 = stat.norm(mu, sigma).pdf(prob_greater_than_x2)
                     fig.add_trace(
                         go.Scatter(x=prob_less_than_x1,
-                                   y=norm_pdf1,
-                                   name="Probability",
-                                   marker_color=stat_colours["norm"],
-                                   fill="tozeroy",
-                                   fillcolor=stat_colours["z"]))
+                                    y=norm_pdf1,
+                                    name="Probability",
+                                    marker_color=stat_colours["norm"],
+                                    fill="tozeroy",
+                                    fillcolor=stat_colours["z"]))
                     fig.add_trace(
                         go.Scatter(x=prob_greater_than_x2,
-                                   y=norm_pdf2,
-                                   marker_color=stat_colours["norm"],
-                                   fill="tozeroy",
-                                   fillcolor=stat_colours["z"],
-                                   showlegend=False))
+                                    y=norm_pdf2,
+                                    marker_color=stat_colours["norm"],
+                                    fill="tozeroy",
+                                    fillcolor=stat_colours["z"],
+                                    showlegend=False))
                     empirical_rule(fig, mu, sigma, norm_x)
-                    # empirical_rule(fig, mu, sigma, norm_pdf2)
-    return fig, {"display": "inline"}, f"Mean: {mu}", f"Standard deviation: {sigma}", f"Probability: {probability}%"
+                # empirical_rule(fig, mu, sigma, norm_pdf2)
+    return fig, {"display": "inline"}, f"Mean: {mu}", f"Standard deviation: {sigma}", f"Probability: {probability}%", sr_norm
 
 
 def empirical_rule(fig, mu, sigma, norm_pdf):

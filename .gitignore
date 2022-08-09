@@ -1,5 +1,6 @@
 .venv
 venv
+pages
 *.pyc
 .DS_Store
 out.html
@@ -14,3 +15,5 @@ hap.py
 intervals*
 prb_loop.py
 smp_*
+app.py
+pg*

@@ -13,6 +13,7 @@ from eci_model import get_df_qual, get_df_quant, df_qual, qual_y_range
     Output("quant-mean", "children"),
     Output("quant-conf-int", "children"),
     Output("quant-conf-level", "children"),
+    Output("sr-hist", "children"),
     Input("quant-dropdown", "value"),
     Input("quant-conf-value", "value")
 )
@@ -38,7 +39,8 @@ def update_histogram(value, conf_level):
     ci_upper = round(conf_int[1], 3)
     conf_percent = conf_level*100
     add_ci_lines(fig, value, ci_lower, ci_upper)
-    return fig, f"Variable: {value}", f"Sample mean: {round_mean}", f"Confidence interval for the mean: ({ci_lower}, {ci_upper})", f"Confidence level: {conf_percent}%"
+    sr_hist = f"Histogram of {value} with confidence interval ({ci_lower}, {ci_upper})"
+    return fig, f"Variable: {value}", f"Sample mean: {round_mean}", f"Confidence interval for the mean: ({ci_lower}, {ci_upper})", f"Confidence level: {conf_percent}%", sr_hist
 
 
 def add_ci_lines(fig, value, ci_lower, ci_upper):
@@ -80,6 +82,7 @@ def set_categories(value):
     Output("qual-population", "children"),
     Output("qual-conf-int", "children"),
     Output("qual-conf-level", "children"),
+    Output("sr-bar", "children"),
     Input("qual-dropdown", "value"),
     Input("qual-conf-value", "value"),
     Input("cat-radio", "value")
@@ -99,7 +102,7 @@ def update_bar(value, conf_level, category):
                                  y=y2_val,
                                  marker_color="#9eab05",
                                  marker_opacity=0.6)])
-    fig.update_layout(barmode='stack',
+    fig.update_layout(barmode="stack",
                       margin=dict(t=20, b=10, l=20, r=20))
     fig.update_yaxes(title_text=None,
                      range=[0, (y1+y2)+1])
@@ -126,47 +129,8 @@ def update_bar(value, conf_level, category):
                   y1=conf_int[1],
                   line=dict(color="#0085a1",
                             width=2))
-    return fig, f"Count of {cat1}: {y1}", f"Count of {cat2}: {y2}", f"Total count: {n}", f"Confidence interval for {cat1}: ({ci_lower}, {ci_upper})", f"Confidence level: {conf_percent}%"
-
-
-# @app.callback(
-#     Output("dropdown-div", "children"),
-#     Output("dropdown-div", "style"),
-#     Input("qual-quant", "value"),
-#     prevent_initial_call=True,
-#     suppress_callback_exceptions=True
-# )
-# def show_dropdown(value):
-#     if value == "qual-radio":
-#         return [dcc.Dropdown(id="qual-dropdown",
-#                              options=[{"label": x, "value": x}
-#                                       for x in df_qual.columns[1:7]],
-#                              value="sex",
-#                              clearable=False)], {"display": "inline"}
-#     elif value == "quant-radio":
-#         return [dcc.Dropdown(id="quant-dropdown",
-#                              options=[{"label": x, "value": x}
-#                                       for x in df_quant.columns[1:6]],
-#                              value="height",
-#                              clearable=False)], {"display": "inline"}
-
-
-# @app.callback(
-#     Output("qual-store", "data"),
-#     Input("qual-dropdown", "value"),
-#     suppress_callback_exceptions=True
-# )
-# def get_df(value):
-    # return get_df_qual(value)
-
-
-# @app.callback(
-#     Output("quant-store", "data"),
-#     Input("quant-dropdown", "value"),
-#     suppress_callback_exceptions=True
-# )
-# def get_df(value):
-#     return get_df_quant(value)
+    sr_bar = f"Barchart of {value} with confidence interval for {cat1} ({ci_lower}, {ci_upper}"
+    return fig, f"Count of {cat1}: {y1}", f"Count of {cat2}: {y2}", f"Total count: {n}", f"Confidence interval for {cat1}: ({ci_lower}, {ci_upper})", f"Confidence level: {conf_percent}%", sr_bar
 
 
 if __name__ == "__main__":

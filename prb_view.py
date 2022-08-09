@@ -57,14 +57,25 @@ app.layout = dbc.Container([
                       step=1),
             html.Label("Set number of draws per second",
                        className="label"),
-            dcc.Slider(1, 10, 1, value=1, id="slider"),
+            dcc.Slider(id="slider",
+                       min=1,
+                       max=100,
+                       value=1,
+                       marks={1: {"label": "1"},
+                              5: {"label": "5"},
+                              10: {"label": "10"},
+                              20: {"label": "20"},
+                              50: {"label": "50"},
+                              100: {"label": "100"}}),
             html.Br()
         ], xs=12, sm=12, md=4, lg=3, xl=3),
         dbc.Col([
             html.Br(),
-            html.P(id="probability"),
-            html.P(id="win-rate"),
-            html.P(id="draws")
+            html.Div([
+                html.P(id="probability"),
+                html.P(id="win-rate"),
+                html.P(id="draws")
+            ], **{"aria-live": "polite"})
         ], xs=6, sm=6, md=4, lg=3, xl=3),
         dbc.Col([
             html.Br(),
@@ -82,8 +93,14 @@ app.layout = dbc.Container([
             html.Br()
     ], className="justify-content-center"),
     dbc.Row([
-        dcc.Graph(id="graph",
-                  figure=blank_fig,
-                  config={"displayModeBar": False})
+        html.Div([
+            dcc.Graph(id="graph",
+                      figure=blank_fig,
+                      config={"displayModeBar": False})
+        ], role="img"),
+        html.Div(id="sr-graph",
+                 children=[],
+                 className="sr-only",
+                 **{"aria-live": "polite"})
     ])
 ])

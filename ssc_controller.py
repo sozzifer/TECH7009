@@ -16,6 +16,7 @@ from ssc_model import stat_colours
     Output("probability", "children"),
     Output("nu", "disabled"),
     Output("alpha", "disabled"),
+    Output("sr-t", "children"),
     Input("submit", "n_clicks"),
     Input("nu", "value"),
     Input("alpha", "value"),
@@ -48,6 +49,7 @@ def update_graph(n_clicks, nu, alpha, mu, sigma):
                                stat.t.ppf(0.9999, nu, mu, sigma),
                                10000)
         t_pdf2 = stat.t.pdf(upper_ci, nu, mu, sigma)
+        sr_t = f"Student's t distribution graph with mean {mu}, standard deviation {sigma}, {nu} degrees of freedom and confidence level {alpha*100}%"
         fig = go.Figure(go.Scatter(x=x,
                                    y=t_x,
                                    name="Student's t distribution",
@@ -84,7 +86,7 @@ def update_graph(n_clicks, nu, alpha, mu, sigma):
                                  marker_color=stat_colours["+-1std"],
                                  marker_opacity=0,
                                  hovertemplate="Upper CI: %{x:.3f}<extra></extra>"))
-    return fig, {"display": "inline"}, f"Mean: {mu}", f"Standard deviation: {sigma}", f"Degrees of freedom: {nu}", f"Confidence level: {alpha*100}%", f"Confidence interval: ({t1}, {t2})", False, False
+    return fig, {"display": "inline"}, f"Mean: {mu}", f"Standard deviation: {sigma}", f"Degrees of freedom: {nu}", f"Confidence level: {alpha*100}%", f"Confidence interval: ({t1}, {t2})", False, False, sr_t
 
 
 if __name__ == "__main__":

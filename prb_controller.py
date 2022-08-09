@@ -26,15 +26,6 @@ def update_stores(n_clicks_draw, n_clicks_stop, num, total, draws):
     if n_clicks_draw is None:
         raise exceptions.PreventUpdate
     elif num > total:
-        # n_intervals = 0
-        # max_intervals = 0
-        # draw_list = [0]
-        # win_list = [0]
-        # prob_list = [0, 0]
-        # win_rate = 0
-        # my_tickets_string_list = "Tickets bought must be fewer than total tickets"
-        # winning_ticket_list = []
-        # n_clicks_stop = 0
         return no_update,\
             no_update,\
             no_update,\
@@ -71,6 +62,7 @@ def update_stores(n_clicks_draw, n_clicks_stop, num, total, draws):
     Output("draws", "children"),
     Output("my-tickets", "children"),
     Output("winning-ticket", "children"),
+    Output("sr-graph", "children"),
     Input("interval", "n_intervals"),
     Input("draw-store", "data"),
     Input("win-store", "data"),
@@ -110,15 +102,18 @@ def update_graph(n_intervals, draw_list, win_list, prob_list, win_rate, my_ticke
         draws = draw_list[n_intervals-1]
         my_tickets = my_tickets_list[n_intervals-2]
         winning_ticket = winning_ticket_list[n_intervals-2]
+        sr_graph = f"Line chart showing the observed win rate and expected win rate after {draws} draws"
         return fig,\
             f"Expected win rate: {probability}",\
             f"Observed win rate: {win_rate}",\
             f"Draws: {draws}",\
             f"My tickets: {my_tickets}",\
-            f"Winning ticket: {winning_ticket}"
+            f"Winning ticket: {winning_ticket}",\
+            sr_graph
     except:
         return fig,\
             "Tickets bought must be fewer than total tickets",\
+            "",\
             "",\
             "",\
             "",\

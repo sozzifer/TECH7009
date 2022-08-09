@@ -2,13 +2,13 @@ import pandas as pd
 
 df_quant = pd.read_csv("data/happy_quant.csv")
 df_qual = pd.read_csv("data/happy_qual.csv")
-qual_y_range = {"tothappy": 130,
-                "height": 115,
-                "weight": 80,
-                "age": 400,
-                "diff1": 310,
-                "diff2": 310,
-                "bmi": 80}
+qual_y_range = {"Total_happiness": 130,
+                "Height": 115,
+                "Weight": 80,
+                "Age": 400,
+                "1st_difficulty_score": 310,
+                "2nd_difficulty_score": 310,
+                "BMI": 80}
 
 
 def get_df_qual(value, category):

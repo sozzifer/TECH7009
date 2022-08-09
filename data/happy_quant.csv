@@ -1,4 +1,4 @@
-tothappy,height,weight,age,diff1,diff2,bmi,sample
+Total_happiness,Height,Weight,Age,1st_difficulty_score,2nd_difficulty_score,BMI,sample
 11,1.85,76.19,18,110,110,22.261,1
 11,1.77,88,19,125,95,28.088,1
 11,1.74,66,46,100,100,21.799,1

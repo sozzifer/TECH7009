@@ -27,7 +27,7 @@ app.layout = dbc.Container([
                      children=[dcc.Dropdown(id="quant-dropdown",
                                             options=[{"label": x, "value": x}
                                                      for x in df_quant.columns[0:7]],
-                                            value="tothappy",
+                                            value="Total_happiness",
                                             clearable=False)],
                      **{"aria-live": "polite"}),
             html.Br()
@@ -53,7 +53,7 @@ app.layout = dbc.Container([
                 dcc.Graph(id="quant-hist",
                           config={"displayModeBar": False})
             ], role="img"),
-            html.Div(id="text-hist",
+            html.Div(id="sr-hist",
                      children=[],
                      className="sr-only",
                      **{"aria-live": "polite"}),
@@ -62,10 +62,12 @@ app.layout = dbc.Container([
         ], xs=12, sm=12, md=12, lg=8, xl=8),
         dbc.Col([
             html.Br(),
-            html.P(id="quant-variable", children=[]),
-            html.P(id="quant-mean", children=[]),
-            html.P(id="quant-conf-int", children=[]),
-            html.P(id="quant-conf-level", children=[])
+            html.Div([
+                html.P(id="quant-variable", children=[]),
+                html.P(id="quant-mean", children=[]),
+                html.P(id="quant-conf-int", children=[]),
+                html.P(id="quant-conf-level", children=[])
+            ], **{"aria-live": "polite", "aria-atomic": "true"})
         ], xs=12, sm=12, md=12, lg=4, xl=4)
     ]),
     dbc.Row([
@@ -79,7 +81,7 @@ app.layout = dbc.Container([
                      children=[dcc.Dropdown(id="qual-dropdown",
                                             options=[{"label": x, "value": x}
                                                      for x in df_qual.columns[1:6]],
-                                            value="sex",
+                                            value="Sex",
                                             clearable=False)],
                      **{"aria-live": "polite"}),
             html.Br(),
@@ -108,18 +110,20 @@ app.layout = dbc.Container([
                 dcc.Graph(id="qual-bar",
                           config={"displayModeBar": False})
             ], role="img"),
-            html.Div(id="text-bar",
+            html.Div(id="sr-bar",
                      children=[],
                      className="sr-only",
                      **{"aria-live": "polite"})
         ], xs=12, sm=12, md=12, lg=8, xl=8),
         dbc.Col([
             html.Br(),
-            html.P(id="qual-proportion1", children=[]),
-            html.P(id="qual-proportion2", children=[]),
-            html.P(id="qual-population", children=[]),
-            html.P(id="qual-conf-int", children=[]),
-            html.P(id="qual-conf-level", children=[])
+            html.Div([
+                html.P(id="qual-proportion1", children=[]),
+                html.P(id="qual-proportion2", children=[]),
+                html.P(id="qual-population", children=[]),
+                html.P(id="qual-conf-int", children=[]),
+                html.P(id="qual-conf-level", children=[])
+            ], **{"aria-live": "polite", "aria-atomic": "true"})
         ], xs=12, sm=12, md=12, lg=4, xl=4)
     ])
 ])

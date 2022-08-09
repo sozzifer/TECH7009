@@ -62,7 +62,7 @@ app.layout = dbc.Container([
                 dcc.Graph(id="graph-hist1",
                           config={"displayModeBar": False})
             ], role="img"),
-            html.Div(id="text-hist1",
+            html.Div(id="sr-hist1",
                      children=[],
                      className="sr-only",
                      **{"aria-live": "polite"})
@@ -72,7 +72,7 @@ app.layout = dbc.Container([
                 dcc.Graph(id="graph-hist2",
                           config={"displayModeBar": False})
             ], role="img"),
-            html.Div(id="text-hist2",
+            html.Div(id="sr-hist2",
                      children=[],
                      className="sr-only",
                      **{"aria-live": "polite"})
@@ -84,7 +84,7 @@ app.layout = dbc.Container([
                 dcc.Graph(id="graph-box1",
                           config={"displayModeBar": False})
             ], role="img"),
-            html.Div(id="text-box1",
+            html.Div(id="sr-box1",
                      children=[],
                      className="sr-only",
                      **{"aria-live": "polite"})
@@ -94,7 +94,7 @@ app.layout = dbc.Container([
                 dcc.Graph(id="graph-box2",
                           config={"displayModeBar": False})
             ], role="img"),
-            html.Div(id="text-box2",
+            html.Div(id="sr-box2",
                      children=[],
                      className="sr-only",
                      **{"aria-live": "polite"})

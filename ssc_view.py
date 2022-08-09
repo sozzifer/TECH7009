@@ -27,12 +27,18 @@ app.layout = dbc.Container([
                 html.P(id="current-nu", children=[]),
                 html.P(id="current-alpha", children=[]),
                 html.P(id="probability", children=[])
-            ], id="output", style={"display": "none"})
+            ], id="output", style={"display": "none"}, **{"aria-live": "polite"})
         ], xs=12, sm=12, md=3, lg=4, xl=4),
         dbc.Col([
-            dcc.Graph(id="t-dist-fig",
-                      figure=create_blank_fig(),
-                      config={"displayModeBar": False})
+            html.Div([
+                dcc.Graph(id="t-dist-fig",
+                          figure=create_blank_fig(),
+                          config={"displayModeBar": False})
+            ], role="img"),
+            html.Div(id="sr-t",
+                     children=[],
+                     className="sr-only",
+                     **{"aria-live": "polite"})
         ], xs=12, sm=12, md=9, lg=8, xl=8)
     ]),
     dbc.Row([
@@ -91,10 +97,5 @@ app.layout = dbc.Container([
                        disabled=True),
             html.Br()
         ], xs=12, sm=12, md=9, lg=8, xl=8)
-    ]),
-    dbc.Row([
-        dbc.Col([
-            
-        ], xs=12, sm=3, md=2, lg=2, xl=2)
     ])
 ])

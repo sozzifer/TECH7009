@@ -278,19 +278,19 @@ def update_boxplot(value):
 
 
 @app.callback(
-    Output("text-hist1", "children"),
-    Output("text-hist2", "children"),
-    Output("text-box1", "children"),
-    Output("text-box2", "children"),
+    Output("sr-hist1", "children"),
+    Output("sr-hist2", "children"),
+    Output("sr-box1", "children"),
+    Output("sr-box2", "children"),
     Input("cols-dropdown", "value")
 )
 def graph_alt_text(value):
     categories, _, _ = dis_model.get_df(value)
-    hist_text1 = f"Histogram of Total happiness for {value} = {categories[0]}"
-    hist_text2 = f"Histogram of Total happiness for {value} = {categories[1]}"
-    box_text1 = f"Boxplot of Total happiness for {value} = {categories[0]}"
-    box_text2 = f"Boxplot of Total happiness for {value} = {categories[1]}"
-    return hist_text1, hist_text2, box_text1, box_text2
+    sr_hist1 = f"Histogram of Total happiness for {value} = {categories[0]}"
+    sr_hist2 = f"Histogram of Total happiness for {value} = {categories[1]}"
+    sr_box1 = f"Boxplot of Total happiness for {value} = {categories[0]}"
+    sr_box2 = f"Boxplot of Total happiness for {value} = {categories[1]}"
+    return sr_hist1, sr_hist2, sr_box1, sr_box2
 
 
 @app.callback(
