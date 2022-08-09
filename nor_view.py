@@ -75,6 +75,7 @@ app.layout = dbc.Container([
         ], xs=4, sm=2, md=2, lg=2, xl=2),
         dbc.Col([
             html.Br(),
+            html.Br(),
             dbc.Button(id="submit",
                        n_clicks=0,
                        children="Submit"),
