@@ -13,16 +13,15 @@
     --ltgrey: #f3f3f3;
 }
 
+/* Fonts */
 @font-face {
     font-family: "Regular";
     src: url("OpenSans-Regular.ttf");
 }
-
 @font-face {
     font-family: "SemiBold";
     src: url("OpenSans-SemiBold.ttf");
 }
-
 @font-face {
     font-family: "ExtraBold";
     src: url("OpenSans-ExtraBold.ttf");
@@ -33,11 +32,6 @@ body {
     margin: 20px auto;
     background-color: var(--ltgrey);
 }
-
-.container {
-    width: 100%
-}
-
 h1 {
     font-family: "ExtraBold", sans-serif;
     text-align: center;
@@ -45,18 +39,23 @@ h1 {
 }
 h2 {
     font-family: "SemiBold", sans-serif;
-    /* font-size: 18px; */
-    /* margin: 0 auto 4px; */
     padding: 10px
 }
 h3 {
     font-family: "SemiBold", sans-serif;
-    font-size: 18px;
+    font-size: 24px;
     text-align: center;
-    margin: 0 auto 4px
+}
+p {
+    font-size: 16px;
+}
+/* Class name for bold text inside a paragraph using html.Span - see eci_view line 19 */
+.bold-p {
+    font-family: "SemiBold", sans-serif;
 }
 
-table.desc {
+/* Tables */
+table {
     margin: 0 auto
 }
 td,
@@ -69,46 +68,68 @@ th.right {
     text-align: right;
 }
 
-#hist-row,
-#box-row {
-    margin: 10px
+/* Bootstrap */
+.container {
+    width: 100%
+}
+.row {
+    margin: 20px
 }
 
-#collapse1,
-#collapse2 {
+/* Buttons */
+.button {
+    margin: 10px;
+    background-color: #003896;
+    font-size: 16px
+}
+
+/*  Descriptive statistics toggle - DIS */
+#collapse1, #collapse2 {
     margin: 10px auto
 }
 
-#toggle, #draw, #stop {
-    margin: 10px;
-    background-color: #003896;
-    width: 250px
+/* Labels */
+.label {
+    margin: 5px;
+    font-weight: bold;
+    font-size: 16px;
 }
 
+/* Input validation */
+.error {
+    font-weight: bold;
+    display: none;
+}
+input:invalid {
+    outline: solid var(--pink)
+}
+.Select-value-label {
+    font-size: 16px;
+}
+
+/* Graph key - DIS */
 .mean-key {
     border-top: 3px solid var(--gold);
     display: block;
     width: 30px
 }
-
 .median-key {
     border-top: 3px solid var(--green);
     display: block;
     width: 30px
 }
-
 .std-key {
     border-top: 3px solid var(--aqua);
     display: block;
     width: 30px
 }
-
 .q1-key, .q3-key {
     border-top: 3px solid var(--red);
     display: block;
     width: 30px
 }
 
+/* Screen reader alt text for graphs with role=img */
 .sr-only {
     position: absolute;
     left: -10000px;
@@ -118,10 +139,7 @@ th.right {
     overflow: hidden;
 }
 
-.label {
-    margin: 5px
-}
-
+/* Slider formatting */
 .rc-slider-track {
     background-color: var(--blue);
 }
@@ -141,20 +159,4 @@ th.right {
 }
 .rc-slider-mark-text {
     font-size: 14px;
-}
-#graph {
-    margin: 20px auto
-}
-
-#error {
-    font-weight: bold;
-    display: none;
-}
-
-#calc-type {
-    display: block;
-}
-
-input:invalid {
-    outline: solid var(--pink)
 }

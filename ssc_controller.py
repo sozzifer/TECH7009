@@ -52,7 +52,7 @@ def update_graph(n_clicks, nu, alpha, mu, sigma):
         sr_t = f"Student's t distribution graph with mean {mu}, standard deviation {sigma}, {nu} degrees of freedom and confidence level {alpha*100}%"
         fig = go.Figure(go.Scatter(x=x,
                                    y=t_x,
-                                   name="Student's t distribution",
+                                   name="t distribution",
                                    marker_color=stat_colours["norm"],
                                    hoverinfo="skip"),
                                    layout={"margin": dict(t=20, b=10, l=20, r=20),

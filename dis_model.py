@@ -2,6 +2,15 @@ import pandas as pd
 
 happy_df = pd.read_csv("data/dis_happy.csv")
 
+stat_colours = {
+    "grp1": "#d10373",
+    "grp2": "#9eab05",
+    "mean": "#f49103",
+    "median": "#006338",
+    "std": "#0085a1",
+    "quartile": "#c70540"
+}
+
 
 def get_df(value):
     df = happy_df[["Total happiness", value]].dropna().reset_index(drop=True)

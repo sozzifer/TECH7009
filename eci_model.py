@@ -2,7 +2,7 @@ import pandas as pd
 
 df_quant = pd.read_csv("data/happy_quant.csv")
 df_qual = pd.read_csv("data/happy_qual.csv")
-qual_y_range = {"Total_happiness": 130,
+quant_y_range = {"Total_happiness": 130,
                 "Height": 115,
                 "Weight": 80,
                 "Age": 400,
@@ -16,7 +16,7 @@ def get_df_qual(value, category):
     df2 = df_qual[value][(df_qual[value] != category)].dropna().reset_index(drop=True)
     cat1 = df1[0]
     cat2 = df2[0]
-    x = ["Observed", "Expected"]
+    x = ["Observed proportions", "Equal proportions"]
     y1 = df1.count()
     y2 = df2.count()
     expected_y = (y1+y2)/2

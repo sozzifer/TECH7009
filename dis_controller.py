@@ -1,18 +1,9 @@
 from dash import html, Input, Output, State
 import plotly.express as px
 from dis_view import app
-import dis_model
+from dis_model import get_df, get_stats, stat_colours
 import plotly.graph_objects as go
 import numpy as np
-
-stat_colours = {
-    "grp1": "#d10373",
-    "grp2": "#9eab05",
-    "mean": "#f49103",
-    "median": "#006338",
-    "std": "#0085a1",
-    "quartile": "#c70540"
-}
 
 
 @app.callback(
@@ -21,14 +12,14 @@ stat_colours = {
     Input("cols-dropdown", "value")
 )
 def update_statistics(value):
-    categories, stats_df1, stats_df2 = dis_model.get_df(value)
+    categories, stats_df1, stats_df2 = get_df(value)
     group1 = categories[0]
     group2 = categories[1]
-    n1, mean1, std1, q1_1, median1, q3_1, iqr1 = dis_model.get_stats(stats_df1)
-    n2, mean2, std2, q1_2, median2, q3_2, iqr2 = dis_model.get_stats(stats_df2)
+    n1, mean1, std1, q1_1, median1, q3_1, iqr1 = get_stats(stats_df1)
+    n2, mean2, std2, q1_2, median2, q3_2, iqr2 = get_stats(stats_df2)
     f_std1 = u"\u00B1" + str(std1)
     f_std2 = u"\u00B1" + str(std2)
-    return [html.Thead([html.Th(children=[f"{value}"], className="right"),
+    return [html.Thead([html.Th(children=[f"Descriptive statistics: {value}"], className="right"),
                         html.Th(children=[f"{group1}"]),
                         html.Th(children=["Key"])]),
             html.Tr([html.Td(children=["Sample size:"], className="right"),
@@ -52,7 +43,7 @@ def update_statistics(value):
             html.Tr([html.Td(children=["Interquartile range:"], className="right"),
                      html.Td(children=[f"{iqr1}"]),
                      html.Td(children=[])])],\
-        [html.Thead([html.Th(children=[f"{value}"], className="right"),
+        [html.Thead([html.Th(children=[f"Descriptive statistics: {value}"], className="right"),
                      html.Th(children=[f"{group2}"]),
                      html.Th(children=["Key"])]),
          html.Tr([html.Td(children=["Sample size:"], className="right"),
@@ -80,14 +71,14 @@ def update_statistics(value):
 
 def format_histogram(df, fig):
     scatter_range = list(range(0, 93))
-    _, mean, std, q1, median, q3, _ = dis_model.get_stats(df)
+    _, mean, std, q1, median, q3, _ = get_stats(df)
 
     fig.update_layout(xaxis2=dict(matches='x',
                                   layer="above traces",
                                   overlaying="x"),
-                      margin=dict(t=10, b=20),
+                      margin=dict(t=20, b=10, l=20, r=20),
                       height=300,
-                      xaxis={"side": "top"})
+                      font_size=14)
     fig.update_xaxes(range=[0, 28.5],
                      dtick=7,
                      tick0=7)
@@ -99,43 +90,37 @@ def format_histogram(df, fig):
                    y=scatter_range,
                    marker_color=stat_colours["mean"],
                    hovertemplate="Mean: %{x:.3f}<extra></extra>",
-                   showlegend=False)
-    )
+                   showlegend=False))
     fig.add_trace(
         go.Scatter(x=[median] * 92,
                    y=scatter_range,
                    marker_color=stat_colours["median"],
                    hovertemplate="Median: %{x}<extra></extra>",
-                   showlegend=False)
-    )
+                   showlegend=False))
     fig.add_trace(
         go.Scatter(x=[mean + std] * 92,
                    y=scatter_range,
                    marker_color=stat_colours["std"],
                    hovertemplate="Mean + SD: %{x:.3f}<extra></extra>",
-                   showlegend=False)
-    )
+                   showlegend=False))
     fig.add_trace(
         go.Scatter(x=[mean - std] * 92,
                    y=scatter_range,
                    marker_color=stat_colours["std"],
                    hovertemplate="Mean - SD: %{x:.3f}<extra></extra>",
-                   showlegend=False)
-    )
+                   showlegend=False))
     fig.add_trace(
         go.Scatter(x=[q1] * 92,
                    y=scatter_range,
                    marker_color=stat_colours["quartile"],
                    hovertemplate="Q1: %{x}<extra></extra>",
-                   showlegend=False)
-    )
+                   showlegend=False))
     fig.add_trace(
         go.Scatter(x=[q3] * 92,
                    y=scatter_range,
                    marker_color=stat_colours["quartile"],
                    hovertemplate="Q3: %{x}<extra></extra>",
-                   showlegend=False)
-    )
+                   showlegend=False))
 
 
 def hist_hovertext(df):
@@ -149,10 +134,12 @@ def hist_hovertext(df):
 @app.callback(
     Output("graph-hist1", "figure"),
     Output("graph-hist2", "figure"),
+    Output("sr-hist1", "children"),
+    Output("sr-hist2", "children"),
     Input("cols-dropdown", "value")
 )
 def update_histogram(value):
-    categories, hist_df1, hist_df2 = dis_model.get_df(value)
+    categories, hist_df1, hist_df2 = get_df(value)
 
     fig1 = go.Figure(
         go.Histogram(x=hist_df1,
@@ -181,12 +168,15 @@ def update_histogram(value):
     format_histogram(hist_df1, fig1)
     format_histogram(hist_df2, fig2)
 
-    return fig1, fig2
+    sr_hist1 = f"Histogram of Total happiness for {value} = {categories[0]}"
+    sr_hist2 = f"Histogram of Total happiness for {value} = {categories[1]}"
+
+    return fig1, fig2, sr_hist1, sr_hist2
 
 
 def format_boxplot(df, fig, color):
     scatter_range = np.linspace(-0.5, 0.5, 100)
-    _, mean, std, q1, median, q3, _ = dis_model.get_stats(df)
+    _, mean, std, q1, median, q3, _ = get_stats(df)
 
     fig.add_trace(
         go.Scatter(x=[mean]*100,
@@ -247,9 +237,9 @@ def format_boxplot(df, fig, color):
     fig.update_layout(xaxis2=dict(matches='x',
                                   layer="above traces",
                                   overlaying="x"),
-                      margin=dict(t=10, b=10),
+                      margin=dict(t=20, b=10, l=20, r=20),
                       height=300,
-                      xaxis={"side": "top"})
+                      font_size=14)
     fig.update_xaxes(range=[0, 28.5],
                      dtick=7,
                      tick0=7)
@@ -262,10 +252,12 @@ def format_boxplot(df, fig, color):
 @app.callback(
     Output("graph-box1", "figure"),
     Output("graph-box2", "figure"),
+    Output("sr-box1", "children"),
+    Output("sr-box2", "children"),
     Input("cols-dropdown", "value")
 )
 def update_boxplot(value):
-    categories, box_df1, box_df2 = dis_model.get_df(value)
+    categories, box_df1, box_df2 = get_df(value)
     fig1 = go.Figure()
     fig2 = go.Figure()
     fig1.update_xaxes(
@@ -274,23 +266,11 @@ def update_boxplot(value):
         title_text=f"Boxplot of Total happiness for {value} = {categories[1]}")
     format_boxplot(box_df1, fig1, stat_colours["grp1"])
     format_boxplot(box_df2, fig2, stat_colours["grp2"])
-    return fig1, fig2
 
-
-@app.callback(
-    Output("sr-hist1", "children"),
-    Output("sr-hist2", "children"),
-    Output("sr-box1", "children"),
-    Output("sr-box2", "children"),
-    Input("cols-dropdown", "value")
-)
-def graph_alt_text(value):
-    categories, _, _ = dis_model.get_df(value)
-    sr_hist1 = f"Histogram of Total happiness for {value} = {categories[0]}"
-    sr_hist2 = f"Histogram of Total happiness for {value} = {categories[1]}"
     sr_box1 = f"Boxplot of Total happiness for {value} = {categories[0]}"
     sr_box2 = f"Boxplot of Total happiness for {value} = {categories[1]}"
-    return sr_hist1, sr_hist2, sr_box1, sr_box2
+
+    return fig1, fig2, sr_box1, sr_box2
 
 
 @app.callback(
@@ -300,10 +280,22 @@ def graph_alt_text(value):
     State("collapse1", "is_open"),
     State("collapse2", "is_open"),
 )
-def toggle(n_clicks, is_open1, is_open2):
+def toggle_cards(n_clicks, is_open1, is_open2):
     if n_clicks:
         return not is_open1, not is_open2
     return is_open1, is_open2
+
+
+@app.callback(
+    Output("toggle", "children"),
+    Output("toggle", "title"),
+    Input("toggle", "n_clicks")
+)
+def button_text(n_clicks):
+    if n_clicks%2 == 1:
+        return "Show Descriptive statistics", "Show Descriptive statistics"
+    else:
+        return "Hide Descriptive statistics", "Hide Descriptive statistics"
 
 
 if __name__ == "__main__":

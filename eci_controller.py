@@ -4,7 +4,7 @@ import numpy as np
 import scipy.stats as stat
 import statsmodels.stats.proportion as statmod
 from eci_view import app
-from eci_model import get_df_qual, get_df_quant, df_qual, qual_y_range
+from eci_model import get_df_qual, get_df_quant, df_qual, quant_y_range
 
 
 @app.callback(
@@ -26,8 +26,9 @@ def update_histogram(value, conf_level):
                       marker_color="rgba(158,171,5,0.5)",
                       marker_line_width=1)
     fig.update_yaxes(title_text=None,
-                     range=[0, qual_y_range[value]])
-    fig.update_layout(margin=dict(t=20, b=10, l=20, r=20))
+                     range=[0, quant_y_range[value]])
+    fig.update_layout(margin=dict(t=20, b=10, l=20, r=20),
+                      font_size=14)
     mean = np.mean(df)
     sem = stat.sem(df)
     conf_int = stat.norm.interval(
@@ -44,20 +45,22 @@ def update_histogram(value, conf_level):
 
 
 def add_ci_lines(fig, value, ci_lower, ci_upper):
-    y = np.linspace(0, qual_y_range[value], 10)
+    y = np.linspace(0, quant_y_range[value], 10)
     fig.add_trace(
         go.Scatter(x=[ci_lower] * 10,
                    y=y,
                    marker_opacity=0,
                    marker_color="#0085a1",
-                   name="CI lower bound")
+                   name="CI lower bound",
+                   hovertemplate="CI lower bound: %{x:.3f}<extra></extra>")
     )
     fig.add_trace(
         go.Scatter(x=[ci_upper] * 10,
                    y=y,
                    marker_opacity=0,
                    marker_color="#0085a1",
-                   name="CI upper bound")
+                   name="CI upper bound",
+                   hovertemplate="CI upper bound: %{x:.3f}<extra></extra>")
     )
     return fig
 
@@ -103,7 +106,8 @@ def update_bar(value, conf_level, category):
                                  marker_color="#9eab05",
                                  marker_opacity=0.6)])
     fig.update_layout(barmode="stack",
-                      margin=dict(t=20, b=10, l=20, r=20))
+                      margin=dict(t=20, b=10, l=20, r=20),
+                      font_size=14)
     fig.update_yaxes(title_text=None,
                      range=[0, (y1+y2)+1])
     x = y1
