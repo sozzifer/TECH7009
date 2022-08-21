@@ -52,7 +52,7 @@ app.layout = dbc.Container([
                     html.Span(id="conf-text", className="bold-p"),
                     html.Span(id="conf-val")
                 ]),
-                html.P("Accept or reject null hypothesis:", className="bold-p"),
+                html.P("Conclusion:", className="bold-p"),
                 html.P(id="acc-rej-h0"),
             ], id="results", style={"display": "none"})
         ], xs=12, sm=12, md=12, lg=12, xl=4)

@@ -49,18 +49,19 @@ h3 {
 p {
     font-size: 16px;
 }
-/* Class name for bold text inside a paragraph using html.Span - see eci_view line 19 */
+/* Class name for bold text inside a paragraph using html.Span */
 .bold-p {
     font-family: "SemiBold", sans-serif;
 }
 
 /* Tables */
 table {
-    margin: 0 auto
+    margin: 0 auto;
 }
 td,
 th {
     padding: 2px 5px;
+    font-family: "Regular", sans-serif;
 }
 td.right,
 th.right {
@@ -106,7 +107,12 @@ input:invalid {
 .Select-value-label {
     font-size: 16px;
 }
-
+.invalid-feedback {
+    color: var(--pink)
+}
+.form-select.is-invalid {
+    border-color: var(--pink);
+}
 /* Graph key - DIS */
 .mean-key {
     border-top: 3px solid var(--gold);
