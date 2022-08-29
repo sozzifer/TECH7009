@@ -8,6 +8,9 @@ from nor_model import stat_colours
 
 @app.callback(
     Output("normal-dist-fig", "figure"),
+    Output("z1", "invalid"),
+    Output("z2", "invalid"),
+    Output("error", "children"),
     Output("output", "style"),
     Output("current-mu", "children"),
     Output("current-sigma", "children"),
@@ -33,20 +36,17 @@ def update_graph(n_clicks, mu, sigma, calc_type, z1, z2):
             go.Scatter(x=x,
                        y=norm_x,
                        marker_color=stat_colours["norm"],
-                       name="Normal distribution"),
+                       name="Normal distribution",
+                       hoverinfo="skip"),
             layout={"margin": dict(t=20, b=10, l=20, r=20),
                     "height": 400,
                     "font_size": 14})
-        if calc_type is None:
-            return fig, {"display": "inline"}, "Please select a calculation type", "", "", ""
-        elif calc_type == "<" or calc_type == ">":
+        if calc_type == "<" or calc_type == ">":
             if z1 is None:
-                return fig, {"display": "inline"}, "Please enter a value for z1", "", "", ""
+                return fig, True, False, "Enter a value for z1", no_update, "", "", "", ""
             else:
                 sr_norm = f"Normal distribution graph with mean {mu}, standard deviation {sigma} and z1 = {z1}"
                 x1 = stat.norm(mu, sigma).cdf(z1)
-                custom_data = (x1,) * 10000
-                # print(customdata)
                 if calc_type == "<":
                     probability = round(x1*100, 2)
                     prob_less_than_x1 = np.linspace(
@@ -61,9 +61,7 @@ def update_graph(n_clicks, mu, sigma, calc_type, z1, z2):
                                    marker_color=stat_colours["norm"],
                                    fill="tozeroy",
                                    fillcolor=stat_colours["z"],
-                                   customdata=custom_data,
-                                   hoveron="fills",
-                                   hovertemplate="Probability = %{customdata}<extra></extra>"))
+                                   hoveron="fills"))
                     empirical_rule(fig, mu, sigma, norm_x)
                 elif calc_type == ">":
                     probability = round((1 - x1)*100, 2)
@@ -75,6 +73,7 @@ def update_graph(n_clicks, mu, sigma, calc_type, z1, z2):
                     fig.add_trace(
                         go.Scatter(x=prob_greater_than_x1,
                                    y=norm_pdf,
+                                   name="Probability",
                                    marker_color=stat_colours["norm"],
                                    fill="tozeroy",
                                    fillcolor=stat_colours["z"]))
@@ -82,9 +81,9 @@ def update_graph(n_clicks, mu, sigma, calc_type, z1, z2):
                     empirical_rule(fig, mu, sigma, norm_x)
         elif calc_type == "<>" or calc_type == "><":
             if z1 is None or z2 is None:
-                return fig, {"display": "inline"}, "Please enter values for z1 and z2", "", "", ""
+                return fig, True, True, "Enter values for z1 and z2", no_update, "", "", "", ""
             if z1 > z2:
-                return fig, {"display": "inline"}, "z1 must be less than z2", "", "", ""
+                return fig, True, True, "z1 must be less than z2", no_update, "", "", "", ""
             else:
                 sr_norm = f"Normal distribution with mean {mu}, standard deviation {sigma}, z1 = {z1} and z2 = {z2}"
                 if calc_type == "<>":
@@ -136,26 +135,25 @@ def update_graph(n_clicks, mu, sigma, calc_type, z1, z2):
                                     fillcolor=stat_colours["z"],
                                     showlegend=False))
                     empirical_rule(fig, mu, sigma, norm_x)
-                # empirical_rule(fig, mu, sigma, norm_pdf2)
-    return fig, {"display": "inline"}, f"Mean: {mu}", f"Standard deviation: {sigma}", f"Probability: {probability}%", sr_norm
+    return fig, False, False, "", {"display": "inline"}, f"{mu}", f"{sigma}", f"{probability}%", sr_norm
 
 
 def empirical_rule(fig, mu, sigma, norm_pdf):
     fig.add_trace(
         go.Scatter(x=[mu] * 10,
                    y=np.linspace(0, max(norm_pdf), 10),
+                   name="Mean",
                    marker_color=stat_colours["mean"],
                    marker_opacity=0,
-                   hovertemplate="Mean: %{x:.3f}<extra></extra>",
-                   showlegend=False))
+                   hovertemplate="Mean: %{x:.3f}<extra></extra>"))
     fig.add_trace(
         go.Scatter(x=[sigma + mu] * 10,
                    y=np.linspace(0, stat.norm(
                        mu, sigma).pdf(sigma + mu), 10),
+                   name=u"Mean \u00B1 1SD",
                    marker_color=stat_colours["+-1std"],
                    marker_opacity=0,
-                   hovertemplate="Mean + 1SD: %{x:.3f}<extra></extra>",
-                   showlegend=False))
+                   hovertemplate="Mean + 1SD: %{x:.3f}<extra></extra>"))
     fig.add_trace(
         go.Scatter(x=[-sigma + mu] * 10,
                    y=np.linspace(0, stat.norm(
@@ -168,10 +166,10 @@ def empirical_rule(fig, mu, sigma, norm_pdf):
         go.Scatter(x=[2*sigma + mu] * 10,
                    y=np.linspace(0, stat.norm(
                        mu, sigma).pdf(2*sigma + mu), 10),
+                   name=u"Mean \u00B1 2SD",
                    marker_color=stat_colours["+-2std"],
                    marker_opacity=0,
-                   hovertemplate="Mean + 2SD: %{x:.3f}<extra></extra>",
-                   showlegend=False))
+                   hovertemplate="Mean + 2SD: %{x:.3f}<extra></extra>"))
     fig.add_trace(
         go.Scatter(x=[-2*sigma + mu] * 10,
                    y=np.linspace(0, stat.norm(
@@ -184,10 +182,10 @@ def empirical_rule(fig, mu, sigma, norm_pdf):
         go.Scatter(x=[3*sigma + mu] * 10,
                    y=np.linspace(0, stat.norm(
                        mu, sigma).pdf(3*sigma + mu), 10),
+                   name=u"Mean \u00B1 3SD",
                    marker_color=stat_colours["+-3std"],
                    marker_opacity=0,
-                   hovertemplate="Mean + 3SD: %{x:.3f}<extra></extra>",
-                   showlegend=False))
+                   hovertemplate="Mean + 3SD: %{x:.3f}<extra></extra>"))
     fig.add_trace(
         go.Scatter(x=[-3*sigma + mu] * 10,
                    y=np.linspace(0, stat.norm(
@@ -236,4 +234,4 @@ def display_z_inputs(calc_type):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+     app.run(debug=True)

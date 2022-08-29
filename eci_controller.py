@@ -35,13 +35,9 @@ def update_histogram(value, conf_level):
         alpha=conf_level,
         loc=mean,
         scale=sem)
-    round_mean = round(mean, 3)
-    ci_lower = round(conf_int[0], 3)
-    ci_upper = round(conf_int[1], 3)
-    conf_percent = conf_level*100
-    add_ci_lines(fig, value, ci_lower, ci_upper)
-    sr_hist = f"Histogram of {value} with confidence interval ({ci_lower}, {ci_upper})"
-    return fig, f"Variable: {value}", f"Sample mean: {round_mean}", f"Confidence interval for the mean: ({ci_lower}, {ci_upper})", f"Confidence level: {conf_percent}%", sr_hist
+    add_ci_lines(fig, value, conf_int[0], conf_int[1])
+    sr_hist = f"Histogram of {value} with confidence interval ({conf_int[0]:.3f}, {conf_int[1]:.3f})"
+    return fig, f"{value}", f"{mean:.3f}", f"({conf_int[0]:.3f}, {conf_int[1]:.3f})", f"{conf_level:.0%}", sr_hist
 
 
 def add_ci_lines(fig, value, ci_lower, ci_upper):
@@ -51,7 +47,7 @@ def add_ci_lines(fig, value, ci_lower, ci_upper):
                    y=y,
                    marker_opacity=0,
                    marker_color="#0085a1",
-                   name="CI lower bound",
+                   name="Confidence<br>interval<br>(upper/lower<br>bounds)",
                    hovertemplate="CI lower bound: %{x:.3f}<extra></extra>")
     )
     fig.add_trace(
@@ -59,8 +55,8 @@ def add_ci_lines(fig, value, ci_lower, ci_upper):
                    y=y,
                    marker_opacity=0,
                    marker_color="#0085a1",
-                   name="CI upper bound",
-                   hovertemplate="CI upper bound: %{x:.3f}<extra></extra>")
+                   hovertemplate="CI upper bound: %{x:.3f}<extra></extra>",
+                   showlegend=False)
     )
     return fig
 
@@ -80,10 +76,14 @@ def set_categories(value):
 
 @app.callback(
     Output("qual-bar", "figure"),
-    Output("qual-proportion1", "children"),
-    Output("qual-proportion2", "children"),
-    Output("qual-population", "children"),
-    Output("qual-conf-int", "children"),
+    Output("qual-variable", "children"),
+    Output("qual-cat1", "children"),
+    Output("count-cat1", "children"),
+    Output("qual-cat2", "children"),
+    Output("count-cat2", "children"),
+    Output("qual-n-cat1", "children"),
+    Output("ci-cat1", "children"),
+    Output("qual-ci-result", "children"),
     Output("qual-conf-level", "children"),
     Output("sr-bar", "children"),
     Input("qual-dropdown", "value"),
@@ -94,7 +94,6 @@ def update_bar(value, conf_level, category):
     x, y1, y2, expected_y, cat1, cat2 = get_df_qual(value, category)
     y1_val = [y1, expected_y]
     y2_val = [y2, expected_y]
-    conf_percent = conf_level*100
     fig = go.Figure(data=[go.Bar(name=cat1,
                                  x=x,
                                  y=y1_val,
@@ -113,8 +112,6 @@ def update_bar(value, conf_level, category):
     x = y1
     n = y1 + y2
     conf_int = statmod.proportion_confint(x, n, 1-conf_level, "normal")
-    ci_lower = round(conf_int[0]*n, 2)
-    ci_upper = round(conf_int[1]*n, 2)
     fig.add_shape(type="line",
                   xref="paper",
                   yref="paper",
@@ -133,8 +130,8 @@ def update_bar(value, conf_level, category):
                   y1=conf_int[1],
                   line=dict(color="#0085a1",
                             width=2))
-    sr_bar = f"Barchart of {value} with confidence interval for {cat1} ({ci_lower}, {ci_upper}"
-    return fig, f"Count of {cat1}: {y1}", f"Count of {cat2}: {y2}", f"Total count: {n}", f"Confidence interval for {cat1}: ({ci_lower}, {ci_upper})", f"Confidence level: {conf_percent}%", sr_bar
+    sr_bar = f"Barchart of {value} with confidence interval for {cat1} ({conf_int[0]*n:.2f}, {conf_int[1]*n:.2f}"
+    return fig, value, f"Count of {cat1}: ", y1, f"Count of {cat2}: ", y2, n, f"Confidence interval for {cat1}: ", f"({conf_int[0]*n:.2f}, {conf_int[1]*n:.2f})", f"{conf_level:.0%}", sr_bar
 
 
 if __name__ == "__main__":

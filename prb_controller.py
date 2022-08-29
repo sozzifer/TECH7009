@@ -14,7 +14,7 @@ from prb_model import generate_draws
     Output("my-tickets-store", "data"),
     Output("winning-ticket-store", "data"),
     Output("stop", "n_clicks"),
-    Output("error", "style"),
+    Output("num-tickets", "invalid"),
     Input("draw", "n_clicks"),
     Input("stop", "n_clicks"),
     State("num-tickets", "value"),
@@ -35,7 +35,7 @@ def update_stores(n_clicks_draw, n_clicks_stop, num, total, draws):
             no_update,\
             no_update,\
             no_update,\
-            {"display": "inline"}
+            True
     else:
         n_intervals = 0
         max_intervals = draws + 1
@@ -52,7 +52,7 @@ def update_stores(n_clicks_draw, n_clicks_stop, num, total, draws):
             my_tickets_string_list,\
             winning_ticket_list,\
             n_clicks_stop,\
-            {"display": "none"}
+            False
 
 
 @app.callback(
@@ -72,58 +72,51 @@ def update_graph(n_intervals, draw_list, win_list, prob_list, win_rate):
     try:
         fig = go.Figure(
             go.Scatter(x=[], y=[]),
-                       layout={"margin": dict(t=20, b=10, l=20, r=20),
-                               "height": 300,
-                               "xaxis_title": "Number of draws",
-                               "yaxis_title": "Wins",
-                               "font_size": 14})
+            layout={"margin": dict(t=20, b=10, l=20, r=20),
+                    "height": 375,
+                    "xaxis_title": "Number of draws",
+                    "yaxis_title": "Wins",
+                    "font_size": 14})
         fig.update_xaxes(range=[-0.1, len(draw_list)-0.9])
-        fig.update_yaxes(range=[-0.1, max(win_list[-1]+0.1, prob_list[-1]+0.1)])
+        fig.update_yaxes(
+            range=[-0.1, max(win_list[-1]+0.1, prob_list[-1]+0.1)])
         if win_list == prob_list:
             fig.add_trace(
                 go.Scatter(x=draw_list[0:n_intervals],
-                        y=win_list[0:n_intervals],
-                        name="Observed wins",
-                        mode="lines",
-                        marker_color="#9eab05",
-                        hovertemplate="Number of observed wins: %{y}<br>Number of draws: %{x}<extra></extra>"))
+                           y=win_list[0:n_intervals],
+                           name="Observed wins",
+                           mode="lines",
+                           marker_color="#9eab05",
+                           hovertemplate="Number of observed wins: %{y}<br>Number of draws: %{x}<extra></extra>"))
             fig.add_trace(
                 go.Scatter(x=draw_list[0:n_intervals],
-                        y=prob_list[0:n_intervals],
-                        name="Expected wins",
-                        mode="markers",
-                        marker_color="#d10373",
-                        hovertemplate="Number of expected wins: %{y}<br>Number of draws: %{x}<extra></extra>"))
+                           y=prob_list[0:n_intervals],
+                           name="Expected wins",
+                           mode="markers",
+                           marker_color="#d10373",
+                           hovertemplate="Number of expected wins: %{y}<br>Number of draws: %{x}<extra></extra>"))
         else:
             fig.add_trace(
                 go.Scatter(x=draw_list[0:n_intervals],
-                        y=win_list[0:n_intervals],
-                        name="Observed wins",
-                        mode="lines",
-                        marker_color="#9eab05",
-                        hovertemplate="Number of observed wins: %{y}<br>Number of draws: %{x}<extra></extra>"))
+                           y=win_list[0:n_intervals],
+                           name="Observed wins",
+                           mode="lines",
+                           marker_color="#9eab05",
+                           hovertemplate="Number of observed wins: %{y}<br>Number of draws: %{x}<extra></extra>"))
             fig.add_trace(
                 go.Scatter(x=draw_list[0:n_intervals],
-                        y=prob_list[0:n_intervals],
-                        name="Expected wins",
-                        mode="lines",
-                        marker_color="#d10373",
-                        hovertemplate="Number of expected wins: %{y}<br>Number of draws: %{x}<extra></extra>"))
+                           y=prob_list[0:n_intervals],
+                           name="Expected wins",
+                           mode="lines",
+                           marker_color="#d10373",
+                           hovertemplate="Number of expected wins: %{y}<br>Number of draws: %{x}<extra></extra>"))
         probability = prob_list[1]
         win_rate = win_rate
         draws = draw_list[n_intervals-1]
         sr_graph = f"Line chart showing the observed win rate and expected win rate after {draws} draws"
-        return fig,\
-            f"Expected win rate: {probability}",\
-            f"Observed win rate: {win_rate}",\
-            f"Draws: {draws}",\
-            sr_graph
+        return fig, f"{probability:.2%}", f"{win_rate:.2%}", f"{draws}", sr_graph
     except:
-        return fig,\
-            "Tickets bought must be fewer than total tickets",\
-            "",\
-            "",\
-            ""
+        return no_update, no_update, no_update, no_update, no_update
 
 
 @app.callback(

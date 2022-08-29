@@ -1,4 +1,4 @@
-from dash import Input, Output, State, exceptions, no_update
+from dash import Input, Output, exceptions
 import plotly.graph_objects as go
 import numpy as np
 import scipy.stats as stat
@@ -13,7 +13,7 @@ from ssc_model import stat_colours
     Output("current-sigma", "children"),
     Output("current-nu", "children"),
     Output("current-alpha", "children"),
-    Output("probability", "children"),
+    Output("conf-int", "children"),
     Output("nu", "disabled"),
     Output("alpha", "disabled"),
     Output("sr-t", "children"),
@@ -36,11 +36,6 @@ def update_graph(n_clicks, nu, alpha, mu, sigma):
         t1 = round(conf_int[0], 3)
         t2 = round(conf_int[1], 3)
         alpha_1tail = 1 - ((1 - alpha)/2)
-        # tick_start = int(stat.t.ppf(0.0001, nu, mu, sigma))
-        # if sigma <= 2:
-        #     dtick = 1
-        # elif sigma > 2 and sigma <= 4:
-        #     dtick = 5
         lower_ci = np.linspace(stat.t.ppf(0.0001, nu, mu, sigma),
                                stat.t.ppf(1-alpha_1tail, nu, mu, sigma),
                                10000)
@@ -58,8 +53,6 @@ def update_graph(n_clicks, nu, alpha, mu, sigma):
                                    layout={"margin": dict(t=20, b=10, l=20, r=20),
                                            "height": 400,
                                            "font_size": 14})
-        # fig.update_xaxes(tick0=tick_start,
-        #                  dtick=dtick)
         fig.add_trace(go.Scatter(x=lower_ci,
                                  y=t_pdf1,
                                  name="Probability",
@@ -86,7 +79,7 @@ def update_graph(n_clicks, nu, alpha, mu, sigma):
                                  marker_color=stat_colours["+-1std"],
                                  marker_opacity=0,
                                  hovertemplate="Upper CI: %{x:.3f}<extra></extra>"))
-    return fig, {"display": "inline"}, f"Mean: {mu}", f"Standard deviation: {sigma}", f"Degrees of freedom: {nu}", f"Confidence level: {alpha*100}%", f"Confidence interval: ({t1}, {t2})", False, False, sr_t
+    return fig, {"display": "inline"}, mu, sigma, nu, f"{alpha:.0%}", f"({t1}, {t2})", False, False, sr_t
 
 
 if __name__ == "__main__":

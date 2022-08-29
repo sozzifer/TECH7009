@@ -14,20 +14,46 @@ app = Dash(__name__,
            )
 
 app.layout = dbc.Container([
-    dbc.Row([
-        html.H1("Student's t distribution")
-    ]),
+    # dbc.Row([
+    #     html.H1("Student's t distribution")
+    # ]),
     dbc.Row([
         dbc.Col([
-            html.P("This tool will allow you to view the Student's t distribution curve for different confidence levels and degrees of freedom. To display the distribution, enter values for the mean and standard deviation and click Submit. Adjust the degrees of freedom and confidence level to see how this affects the confidence interval."),
-            html.Div([
-                html.P(id="current-mu", children=[]),
-                html.P(id="current-sigma", children=[]),
-                html.P(id="current-nu", children=[]),
-                html.P(id="current-alpha", children=[]),
-                html.P(id="probability", children=[])
-            ], id="output", style={"display": "none"}, **{"aria-live": "polite"})
-        ], xs=12, sm=12, md=4, lg=4, xl=4),
+            dbc.Card([
+                dbc.CardBody(children=[
+                    "This tool will allow you to view the Student's t distribution curve for different confidence levels and degrees of freedom. To display the distribution, enter values for the mean and standard deviation and click ",
+                    html.Span("Set mean and SD", className="bold-p"),
+                    ". Adjust the degrees of freedom and confidence level to see how this affects the confidence interval.",
+                    html.Br(),
+                    html.Br(),
+                    "Pay particular attention to how the scales of the x and y axes change when you enter different values for the mean, standard deviation, degrees of freedom, and confidence level."
+                ])
+            ]),
+            dbc.Card([
+                dbc.CardBody(children=[
+                    html.H4("Results"),
+                    html.Div([
+                        html.P(children=[
+                            html.Span("Mean: ", className="bold-p"),
+                            html.Span(id="current-mu"),
+                            html.Span("Standard deviation: ", className="bold-p", style={"margin-left":"10px"}),
+                            html.Span(id="current-sigma")
+                        ]),
+                        html.P(children=[
+                            html.Span("Degrees of freedom: ", className="bold-p"),
+                            html.Span(id="current-nu"),
+                            html.Span(
+                                "Confidence level: ", className="bold-p", style={"margin-left": "10px"}),
+                            html.Span(id="current-alpha")
+                        ]),
+                        html.P(children=[
+                            html.Span("Confidence interval: ", className="bold-p"),
+                            html.Span(id="conf-int")
+                        ])
+                    ], id="output", style={"display": "none"}, **{"aria-live": "polite"})
+                ])
+            ])
+        ], xs=12, sm=12, md=6, lg=6, xl=6),
         dbc.Col([
             html.Div([
                 dcc.Graph(id="t-dist-fig",
@@ -38,12 +64,12 @@ app.layout = dbc.Container([
                      children=[],
                      className="sr-only",
                      **{"aria-live": "polite"})
-        ], xs=12, sm=12, md=8, lg=8, xl=8)
+        ], xs=12, sm=12, md=6, lg=6, xl=6)
     ]),
     dbc.Row([
         dbc.Col([
-            html.Label("Mean",
-                       htmlFor="mean",
+            dbc.Label("Mean",
+                       html_for="mean",
                        className="label"),
             dbc.Input(id="mu",
                       name="mean",
@@ -51,9 +77,9 @@ app.layout = dbc.Container([
                       type="number",
                       required=True,
                       debounce=True),
-            html.Label("Standard deviation",
+            dbc.Label("Standard deviation",
                        className="label",
-                       htmlFor="standard-deviation"),
+                       html_for="standard-deviation"),
             dbc.Input(id="sigma",
                       name="standard-deviation",
                       value=1,
@@ -61,14 +87,17 @@ app.layout = dbc.Container([
                       type="number",
                       required=True,
                       debounce=True),
-            dbc.Button(id="submit",
-                       n_clicks=0,
-                       children="Set mean and SD",
-                       class_name="button"),
+            html.Div([
+                dbc.Button(id="submit",
+                           n_clicks=0,
+                           children="Set mean and SD",
+                           class_name="button")
+            ], className="d-flex justify-content-center"),
         ], xs=12, sm=12, md=4, lg=4, xl=4),
         dbc.Col([
-            html.Label("Degrees of freedom",
-                       className="label"),
+            dbc.Label("Degrees of freedom",
+                       className="label",
+                       html_for="nu"),
             dcc.Slider(id="nu",
                        value=10,
                        min=1,
@@ -81,8 +110,9 @@ app.layout = dbc.Container([
                               30: {"label": "30"},
                               40: {"label": "40"}},
                        disabled=True),
-            html.Label("Confidence level",
-                       className="label"),
+            dbc.Label("Confidence level",
+                       className="label",
+                       html_for="alpha"),
             dcc.Slider(id="alpha",
                        value=0.95,
                        min=0.8,

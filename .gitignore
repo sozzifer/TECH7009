@@ -14,6 +14,7 @@ prb_tree.py
 hap.py
 intervals*
 prb_loop.py
+hyp_graphs.py
 smp_*
 app.py
 pg*

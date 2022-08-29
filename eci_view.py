@@ -10,33 +10,34 @@ app = Dash(__name__,
                        "content": "width=device-width, initial-scale=1.0, maximum-scale=1.0"}])
 
 app.layout = dbc.Container([
-    dbc.Row([
-        html.H1("Confidence Intervals")
-    ]),
-    dbc.Row([
-        html.P(children=[
-            "Completion of the Happiness questionnaire was voluntary, therefore the students who completed it can be considered a sample of a larger population - for example, the population of all students who have taken the Basic Data Analysis module. What conclusions can we draw about the population based on the Happy data set? One method is to find a ",
-            html.Span("confidence interval (CI)", className="bold-p"),
-            " of the mean for different variables."
-        ])
-    ]),
+    # dbc.Row([
+    #     html.H1("Confidence Intervals")
+    # ]),
+    # dbc.Row([
+    #     html.P(children=[
+    #         "Completion of the Happiness questionnaire was voluntary, therefore the students who completed it can be considered a sample of a larger population - for example, the population of all students who have taken the Basic Data Analysis module. What conclusions can we draw about the population based on the Happy data set? One method is to find a ",
+    #         html.Span("confidence interval (CI)", className="bold-p"),
+    #         " of the mean for different variables."
+    #     ])
+    # ]),
     dbc.Row([
         html.H2("Confidence Intervals for quantitative variables"),
-        html.P("Because of the large sample size, the confidence interval for the population mean of is quite narrow, even at the 99% confidence level. Select a variable from the dropdown list below to view upper and lower bounds for its mean value.")
+        html.P("Because of the large sample size, the confidence interval for the population mean of the variable of interest is quite narrow, even at the 99% confidence level. Select a variable from the dropdown list below to view upper and lower bounds for the actual value of its population mean.")
     ]),
     dbc.Row([
         dbc.Col([
-            html.Label("Variable", className="label"),
-            html.Div(id="quant-dropdown-div",
-                     children=[dcc.Dropdown(id="quant-dropdown",
-                                            options=[{"label": x, "value": x}
-                                                     for x in df_quant.columns[0:7]],
-                                            value="Total_happiness",
-                                            clearable=False)],
-                     **{"aria-live": "polite"}),
-        ], xs=12, sm=12, md=4, lg=2, xl=2),
+            html.Div(children=[
+                dbc.Label("Variable",
+                          className="label",
+                          html_for="quant-dropdown"),
+                dbc.Select(id="quant-dropdown",
+                           options=[{"label": x, "value": x}
+                                    for x in df_quant.columns[0:5]],
+                           value="Total_happiness")
+            ], id="quant-dropdown-div", **{"aria-live": "polite"}),
+        ], xs=12, sm=12, md=4, lg=3, xl=3),
         dbc.Col([
-            html.Label("Confidence level", className="label"),
+            dbc.Label("Confidence level", className="label", html_for="quant-conf-value"),
             dcc.Slider(id="quant-conf-value",
                        value=0.95,
                        min=0.8,
@@ -46,7 +47,7 @@ app.layout = dbc.Container([
                               0.9: {"label": "90%"}, 
                               0.95: {"label": "95%"},
                               0.99: {"label": "99%"}}),
-        ], xs=12, sm=12, md=8, lg=10, xl=10)
+        ], xs=12, sm=12, md=8, lg=9, xl=9)
     ]),
     dbc.Row([
         dbc.Col([
@@ -59,38 +60,64 @@ app.layout = dbc.Container([
                      children=[],
                      className="sr-only",
                      **{"aria-live": "polite"}),
-        ], xs=12, sm=12, md=12, lg=8, xl=8),
+        ], xs=12, sm=12, md=12, lg=6, xl=6),
         dbc.Col([
             html.Div([
-                html.P(id="quant-variable", children=[]),
-                html.P(id="quant-mean", children=[]),
-                html.P(id="quant-conf-int", children=[]),
-                html.P(id="quant-conf-level", children=[])
-            ], **{"aria-live": "polite", "aria-atomic": "true"})
-        ], xs=12, sm=12, md=12, lg=4, xl=4)
+                dbc.Card([
+                    dbc.CardBody(children=[
+                        html.H4("Results"),
+                        html.P(children=[
+                            html.Span("Variable: ",
+                                    className="bold-p"),
+                            html.Span(id="quant-variable")
+                        ]),
+                        html.P(children=[
+                            html.Span("Sample mean: ",
+                                    className="bold-p"),
+                            html.Span(id="quant-mean")
+                        ]),
+                        html.P(children=[
+                            html.Span("Confidence interval for population mean: ",
+                                    className="bold-p"),
+                            html.Span(id="quant-conf-int")
+                        ]),
+                        html.P(children=[
+                            html.Span("Confidence level: ",
+                                    className="bold-p"),
+                            html.Span(id="quant-conf-level")
+                        ])
+                    ])
+                ])
+            ], **{"aria-live": "polite"})
+        ], xs=12, sm=12, md=12, lg=6, xl=6)
     ]),
     dbc.Row([
         html.H2("Confidence Intervals for qualitative variables"),
-        html.P("When calculating confidence intervals for qualitative data, we are trying to find out if the probability of observing a specific characteristic is evenly distributed between categories, or if there are significant differences in the proportions in each category. For example, is a student completing the Happy questionnaire equally likely to be male or female? Select a variable from the dropdown list to view the observed proportions in each category, and compare this to categories with equal proportions.")
+        html.P("When calculating confidence intervals for qualitative data, we are investigating if the probability of observing a specific characteristic is evenly distributed between categories, or if there are significant differences in the proportions in each category. For example, is a student completing the Happy questionnaire equally likely to be male or female? Select a variable from the dropdown list to view the observed proportions in each category, and compare this to categories with equal proportions.")
     ]),
     dbc.Row([
         dbc.Col([
-            html.Label("Variable", className="label"),
-            html.Div(id="qual-dropdown-div",
-                     children=[dcc.Dropdown(id="qual-dropdown",
-                                            options=[{"label": x, "value": x}
-                                                     for x in df_qual.columns[1:6]],
-                                            value="Sex",
-                                            clearable=False)],
-                     **{"aria-live": "polite"}),
-            html.Label("Category", className="label"),
+            html.Div([
+                dbc.Label("Variable",
+                          className="label",
+                          html_for="qual-dropdown"),
+                dbc.Select(id="qual-dropdown",
+                           options=[{"label": x, "value": x}
+                                        for x in df_qual.columns[1:6]],
+                           value="Sex")
+            ], id="qual-dropdown-div", **{"aria-live": "polite"}),
+            dbc.Label("Category",
+                      className="label",
+                      html_for="cat-radio"),
             dcc.RadioItems(id="cat-radio",
                            options=[],
                            labelStyle={"margin-left": 10},
                            inputStyle={"margin-right": 10})
-        ], xs=12, sm=12, md=4, lg=2, xl=2),
+        ], xs=12, sm=12, md=4, lg=3, xl=3),
         dbc.Col([
-            html.Label("Confidence level", className="label"),
+            dbc.Label("Confidence level",
+                      className="label",
+                      html_for="qual-conf-value"),
             dcc.Slider(id="qual-conf-value",
                        value=0.95,
                        min=0.8,
@@ -100,7 +127,7 @@ app.layout = dbc.Container([
                               0.9: {"label": "90%"},
                               0.95: {"label": "95%"},
                               0.99: {"label": "99%"}}),
-        ], xs=12, sm=12, md=8, lg=10, xl=10)
+        ], xs=12, sm=12, md=8, lg=9, xl=9)
     ]), 
     dbc.Row([
         dbc.Col([
@@ -113,15 +140,39 @@ app.layout = dbc.Container([
                      children=[],
                      className="sr-only",
                      **{"aria-live": "polite"})
-        ], xs=12, sm=12, md=12, lg=8, xl=8),
+        ], xs=12, sm=12, md=12, lg=6, xl=6),
         dbc.Col([
             html.Div([
-                html.P(id="qual-proportion1", children=[]),
-                html.P(id="qual-proportion2", children=[]),
-                html.P(id="qual-population", children=[]),
-                html.P(id="qual-conf-int", children=[]),
-                html.P(id="qual-conf-level", children=[])
-            ], **{"aria-live": "polite", "aria-atomic": "true"})
-        ], xs=12, sm=12, md=12, lg=4, xl=4)
+                dbc.Card([
+                    dbc.CardBody([
+                        html.H4("Results"),
+                        html.P(children=[
+                            html.Span("Variable: ",
+                                      className="bold-p"),
+                            html.Span(id="qual-variable")
+                        ]), html.P(children=[
+                            html.Span(id="qual-cat1", className="bold-p"),
+                            html.Span(id="count-cat1")
+                        ]),
+                        html.P(children=[
+                            html.Span(id="qual-cat2", className="bold-p"),
+                            html.Span(id="count-cat2")
+                        ]),
+                        html.P(children=[
+                            html.Span("Total count: ", className="bold-p"),
+                            html.Span(id="qual-n-cat1")
+                        ]),
+                        html.P(children=[
+                            html.Span(id="ci-cat1", className="bold-p"),
+                            html.Span(id="qual-ci-result")
+                        ]),
+                        html.P(children=[
+                            html.Span("Confidence level: ", className="bold-p"),
+                            html.Span(id="qual-conf-level")
+                        ])
+                    ])
+                ])
+            ], **{"aria-live": "polite"})
+        ], xs=12, sm=12, md=12, lg=6, xl=6)
     ])
 ], fluid=True)

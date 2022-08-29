@@ -1,44 +1,41 @@
 import pandas as pd
 from statsmodels.formula.api import ols
 from statsmodels.graphics.gofplots import qqplot
-import plotly.graph_objects as go
+import math
 
-
-df_quant = pd.read_csv("data/happy_quant.csv")
+car_happy = pd.read_csv("data/car_happy.csv")
 
 
 def not_null(x, y):
-    not_empty = df_quant[(df_quant[x].notnull()) & (df_quant[y].notnull())]
-    return not_empty
+    df_not_null = car_happy[(car_happy[x].notnull()) & (car_happy[y].notnull())]
+    return df_not_null
 
 
 def regression(x, y):
     formula = f"{y} ~ {x}"
-    model = ols(formula, data=df_quant)
+    model = ols(formula, data=car_happy)
     results = model.fit()
     summary = results.summary()
     params = results.params
     residuals = results.resid
     fitted = results.fittedvalues
     r_sq = results.rsquared
-    return summary, params, residuals, fitted, r_sq
+    r = math.sqrt(r_sq)
+    return summary, params, residuals, fitted, r_sq, r
 
 
 # https://www.statsmodels.org/dev/generated/statsmodels.regression.linear_model.OLS.html
-model = ols("Weight ~ Height", data=df_quant)
+model = ols("Weight ~ Height", data=car_happy)
 results = model.fit()
 
 # https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.RegressionResults.html
+summary = results.summary()
 params = results.params
 residuals = results.resid
 fitted = results.fittedvalues
 r_sq = results.rsquared
 conf_int = results.conf_int(0.01)
-# print(conf_int)
-# print(results.summary())
-# print(params)
-# print(r_sq)
-
+# print(summary)
 
 # Probability plot?
 # qqplot_data = qqplot(residuals, line='s').gca().lines

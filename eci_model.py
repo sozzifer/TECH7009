@@ -6,8 +6,8 @@ quant_y_range = {"Total_happiness": 130,
                 "Height": 115,
                 "Weight": 80,
                 "Age": 400,
-                "1st_difficulty_score": 310,
-                "2nd_difficulty_score": 310,
+                "Difficulty_score_1": 310,
+                "Difficulty_score_2": 310,
                 "BMI": 80}
 
 

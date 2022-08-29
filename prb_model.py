@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 
 def generate_draws(num, total, draws):
     draws = list(range(1, draws + 1))
-    probability = round((num/total), 2)
+    probability = num/total
     my_tickets_list = []
     tickets_string_list = []
     my_tickets_string_list = []
@@ -48,7 +48,7 @@ def create_blank_fig():
         go.Scatter(x=[],
                    y=[]),
         layout={"margin": dict(t=20, b=10, l=20, r=20),
-                "height": 300,
+                "height": 375,
                 "xaxis_title": "Number of draws",
                 "yaxis_title": "Wins",
                 "font_size": 14})

@@ -1,16 +1,16 @@
 :root {
-    --lime: #9eab05;
-    --charcoal: #424a52;
-    --pink: #d10373;
-    --purple: #6a2150;
-    --red: #c70540;
-    --yellow: #e3ba12;
-    --gold: #f49103;
-    --aqua: #0085a1;
-    --blue: #003896;
-    --green: #006338;
-    --midgrey: #adafaf;
-    --ltgrey: #f3f3f3;
+    --lime: #9eab05; /* rgba(158, 171, 5, 1) */
+    --charcoal: #424a52; /* rgba(66, 74, 82, 1) */
+    --pink: #d10373; /* rgba(209, 3, 115, 1) */
+    --purple: #6a2150; /* rgba(106, 33, 80, 1) */
+    --red: #c70540; /* rgba(199, 5, 64, 1) */
+    --yellow: #e3ba12; /* rgba(227, 186, 18, 1) */
+    --gold: #f49103; /* rgba(244, 145, 3, 1) */
+    --aqua: #0085a1; /* rgba(0, 133, 161, 1) */
+    --blue: #003896; /* rgba(0, 56, 150, 1) */
+    --green: #006338; /* rgba(0, 99, 56, 1) */
+    --midgrey: #adafaf; /* rgba(173, 175, 175, 1) */
+    --ltgrey: #f3f3f3; /* rgba(243, 243, 243, 1) */
 }
 
 /* Fonts */
@@ -35,10 +35,12 @@ body {
 h1 {
     font-family: "ExtraBold", sans-serif;
     text-align: center;
-    padding: 20px
+    padding: 20px;
+    margin: 0 auto;
 }
 h2 {
     font-family: "SemiBold", sans-serif;
+    font-size: 28px;
     padding: 10px
 }
 h3 {
@@ -48,6 +50,7 @@ h3 {
 }
 p {
     font-size: 16px;
+    margin: 0 auto;
 }
 /* Class name for bold text inside a paragraph using html.Span */
 .bold-p {
@@ -76,17 +79,23 @@ th.right {
 .row {
     margin: 20px
 }
-
+.card {
+    margin: 10px;
+}
 /* Buttons */
 .button {
     margin: 10px;
-    background-color: #003896;
+    background-color: var(--blue);
     font-size: 16px
 }
-
+.btn-primary:focus {
+    background-color: var(--blue);
+    box-shadow: 0 0 0 0.2rem rgba(0, 56, 150, 0.5);
+}
 /*  Descriptive statistics toggle - DIS */
 #collapse1, #collapse2 {
-    margin: 10px auto
+    margin: 0 auto;
+    max-width: 420px;
 }
 
 /* Labels */
@@ -97,10 +106,6 @@ th.right {
 }
 
 /* Input validation */
-.error {
-    font-weight: bold;
-    display: none;
-}
 input:invalid {
     outline: solid var(--pink)
 }
@@ -108,7 +113,7 @@ input:invalid {
     font-size: 16px;
 }
 .invalid-feedback {
-    color: var(--pink)
+    color: var(--pink);
 }
 .form-select.is-invalid {
     border-color: var(--pink);
@@ -135,6 +140,9 @@ input:invalid {
     width: 30px
 }
 
+#graph-hist1, #graph-hist2, #graph-box1, #graph-box2 {
+    max-width: 600px
+}
 /* Screen reader alt text for graphs with role=img */
 .sr-only {
     position: absolute;

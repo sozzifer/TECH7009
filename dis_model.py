@@ -29,3 +29,20 @@ def get_stats(df):
     q3 = df.quantile(0.75)
     iqr = q3 - q1
     return n, mean, std, q1, median, q3, iqr
+
+
+# categories, hist_df1, hist_df2 = get_df("Sex")
+# def hist_hovertext(df):
+#     counts = df.value_counts()
+#     print(f"Counts: {counts.values}")
+#     total = counts.sum()
+#     print(f"Total: {total}")
+#     df_sorted = counts.sort_index()
+#     print(f"Sorted: {df_sorted.values}")
+#     proportions = []
+#     for value in df_sorted.values:
+#         proportions.append(round((value/total)*100, 2))
+#     print(proportions)
+#     return proportions
+
+# hist_hovertext(hist_df1)

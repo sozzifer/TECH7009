@@ -25,37 +25,64 @@ app.layout = dbc.Container([
         dcc.Store(id="my-tickets-store"),
         dcc.Store(id="winning-ticket-store"),
         dbc.Col([
-            html.P("The probability of winning a raffle with n tickets, where you buy x tickets, and one winning ticket is drawn, is x/n."),
-            html.P("Enter the total number of tickets (n) and the number of tickets bought (x), and set the number of draws as 10. Is the observed win rate the same as the expected win rate? What about if you draw 20 times? 50 times?")
-        ], xs=12, sm=12, md=12, lg=3, xl=3),
+            dbc.Card([
+                dbc.CardBody(children=[
+                    "The probability of winning a raffle with n tickets, where you buy x tickets, and one winning ticket is drawn, is x/n.",
+                    html.Br(),
+                    html.Br(),
+                    "Enter the total number of tickets (n) and the number of tickets bought (x), and set the number of draws as 10. Is the observed win rate the same as the expected win rate? What about if you draw 20 times? 50 times?"])]),
+            dbc.Card([
+                dbc.CardBody([
+                    html.H4("Results"),
+                    html.Div([
+                        html.P(children=[
+                            html.Span("Expected win rate: ", className="bold-p"),
+                            html.Span(id="probability")
+                        ]),
+                        html.P(children=[
+                            html.Span("Observed win rate: ", className="bold-p"),
+                            html.Span(id="win-rate")
+                        ]),
+                        html.P(children=[
+                            html.Span("Draws: ", className="bold-p"),
+                            html.Span(id="draws")
+                        ])
+                    ], **{"aria-live": "polite"})
+                ])
+            ])
+        ], xs=12, sm=12, md=12, lg=5, xl=5),
         dbc.Col([
             html.Div([
                 dcc.Graph(id="graph",
                           figure=blank_fig,
                           config={"displayModeBar": False})
-            ], role="img"),
+            ], role="img", style={"height": 350}),
             html.Div(id="sr-graph",
                      children=[],
                      className="sr-only",
                      **{"aria-live": "polite"})
-        ], xs=12, sm=12, md=12, lg=9, xl=9)
+        ], xs=12, sm=12, md=12, lg=7, xl=7)
     ]),
     dbc.Row([
         dbc.Col([
-            html.Label("Enter number of tickets bought, x (max 1000)",
-                       className="label"),
-            dbc.Input(id="num-tickets",
-                      value=3,
-                      type="number",
-                      min=1,
-                      max=1000,
-                      step=1,
-                      required=True),
-            html.P(id="error",
-                   children="Tickets bought must be fewer than total tickets",
-                   className="error"),
-            html.Label("Enter total number of tickets, n (max 1000)",
-                       className="label"),
+            html.Div([
+                dbc.Label("Enter number of tickets bought, x (max 1000)",
+                          class_name="label",
+                          html_for="num-tickets"),
+                dbc.Input(id="num-tickets",
+                          value=3,
+                          type="number",
+                          min=1,
+                          max=1000,
+                          step=1,
+                          required=True,
+                          invalid=False),
+                dbc.FormFeedback("Number of tickets bought must be less than total tickets",
+                                 type="invalid")
+            ], **{"aria-live": "polite"}),
+            dbc.Label("Enter total number of tickets, n (max 1000)",
+                      class_name="label",
+                      html_for="total-tickets"),
             dbc.Input(id="total-tickets",
                       value=10,
                       type="number",
@@ -63,8 +90,9 @@ app.layout = dbc.Container([
                       max=1000,
                       step=1,
                       required=True),
-            html.Label("Enter number of draws (max 100)",
-                       className="label"),
+            dbc.Label("Enter number of draws (max 100)",
+                      class_name="label",
+                      html_for="num-draws"),
             dbc.Input(id="num-draws",
                       value=10,
                       type="number",
@@ -72,13 +100,14 @@ app.layout = dbc.Container([
                       max=100,
                       step=1,
                       required=True)
-        ], xs=12, sm=12, md=12, lg=4, xl=4),
+        ], xs=12, sm=12, md=12, lg=5, xl=5),
         dbc.Col([
-            html.Label("Set number of draws per second",
-                       className="label"),
+            dbc.Label("Set number of draws per second",
+                       class_name="label",
+                       html_for="slider"),
             dcc.Slider(id="slider",
                        min=10,
-                       max=100,
+                       max=50,
                        step=10,
                        value=10),
             html.Div([
@@ -90,19 +119,7 @@ app.layout = dbc.Container([
                            n_clicks=0,
                            children="Stop",
                            class_name="button")
-            ], style={"margin": "0 auto"}),
-            html.Br(),
-            html.Div([
-                html.Div(id="probability",
-                         style={"display": "inline",
-                                "margin-right": 20}),
-                html.Div(id="win-rate",
-                         style={"display": "inline",
-                                "margin-right": 20}),
-                html.Div(id="draws",
-                         style={"display": "inline",
-                                "margin-right": 20})
-            ], style={"display": "inline-block"}, **{"aria-live": "polite"})
-        ], xs=12, sm=12, md=12, lg=8, xl=8)
+            ], className="d-flex justify-content-center", style={"margin": "0 auto"}),
+        ], xs=12, sm=12, md=12, lg=7, xl=7)
     ])
 ], fluid=True)
